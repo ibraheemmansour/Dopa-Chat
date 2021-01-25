@@ -1,1 +1,2 @@
-# smh
+# dopachat
+Dopa Chat
