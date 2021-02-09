@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "dopachat-tvOS.app"
-               BlueprintName = "dopachat-tvOS"
-               ReferencedContainer = "container:dopachat.xcodeproj">
+               BuildableName = "DopaChat-tvOS.app"
+               BlueprintName = "DopaChat-tvOS"
+               ReferencedContainer = "container:DopaChat.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "dopachat-tvOSTests.xctest"
-               BlueprintName = "dopachat-tvOSTests"
-               ReferencedContainer = "container:dopachat.xcodeproj">
+               BuildableName = "DopaChat-tvOSTests.xctest"
+               BlueprintName = "DopaChat-tvOSTests"
+               ReferencedContainer = "container:DopaChat.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "dopachat-tvOS.app"
-            BlueprintName = "dopachat-tvOS"
-            ReferencedContainer = "container:dopachat.xcodeproj">
+            BuildableName = "DopaChat-tvOS.app"
+            BlueprintName = "DopaChat-tvOS"
+            ReferencedContainer = "container:DopaChat.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "dopachat-tvOS.app"
-            BlueprintName = "dopachat-tvOS"
-            ReferencedContainer = "container:dopachat.xcodeproj">
+            BuildableName = "DopaChat-tvOS.app"
+            BlueprintName = "DopaChat-tvOS"
+            ReferencedContainer = "container:DopaChat.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

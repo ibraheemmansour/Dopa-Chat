@@ -1,4 +1,6 @@
-﻿namespace DopaChat.Models
+﻿using Newtonsoft.Json;
+
+namespace DopaChat.Models
 {
     public class UserDto
     {
@@ -12,5 +14,8 @@
         public string Languages { get; set; }
         public string Keywords { get; set; }
         public int CityId { get; set; }
+
+        [JsonIgnore]
+        public CityDto City { get; set; }
     }
 }

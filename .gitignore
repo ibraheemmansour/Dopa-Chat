@@ -67,6 +67,10 @@ artifacts/
 *.svclog
 *.scc
 
+# Random
+*.ai
+*.gif
+
 # Chutzpah Test files
 _Chutzpah*
 

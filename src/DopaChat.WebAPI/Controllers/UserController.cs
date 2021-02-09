@@ -20,7 +20,7 @@ namespace DopaChat.WebAPI.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public IHttpActionResult GetUser(string id)
+        public IHttpActionResult GetUser(int id)
         {
             User user = db.Users.Find(id);
 
