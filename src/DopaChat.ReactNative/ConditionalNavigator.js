@@ -8,8 +8,10 @@ import { logoutAction } from './app/redux/actions/loginActions';
 
 import Settings from './app/config/settings.js';
 
-import LoginScreen from './app/routes/Login';
 import SplashScreen from './app/routes/Splash';
+import LoginScreen from './app/routes/Login';
+import CreateAccountScreen from './app/routes/CreateAccount';
+import HomeScreen from './app/routes/Home';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -47,7 +49,19 @@ class ConditionalNavigator extends Component {
         navigationOptions: {
           headerShown: false
         }
-      }
+      },
+      CreateAccountScreen: {
+        screen: CreateAccountScreen,
+        navigationOptions: {
+          headerShown: false
+        }
+      },
+      HomeScreen: {
+        screen: HomeScreen,
+        navigationOptions: {
+          headerShown: false
+        }
+      },
     }, {
       initialRouteName: Settings.ScreenNames.SplashScreen,
       initialRouteParams: {

@@ -1,6 +1,7 @@
 ﻿using DopaChat.Data;
 using DopaChat.WebAPI.Classes;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Linq;
 using System.Web.Http;
 
@@ -23,19 +24,20 @@ namespace DopaChat.WebAPI.Controllers
 
             if (!user.Password.ToLower().Equals(model.Password.ToLower()))
             {
-                return Unauthorized();
+                return BadRequest();
             }
 
             return Ok(JObject.FromObject(new
             {
-                user.Nickname,
-                user.FirstName,
-                user.LastName,
-                user.Email,
-                user.Description,
-                user.Languages,
-                user.Keywords,
-                user.CityId
+                nickname = user.Nickname,
+                firstName = user.FirstName,
+                lastName = user.LastName,
+                email = user.Email,
+                description = user.Description,
+                language = user.Languages,
+                keywords = user.Keywords,
+                city = user.CityId,
+                access_token = Guid.NewGuid().ToString("N")
             }));
         }
     }

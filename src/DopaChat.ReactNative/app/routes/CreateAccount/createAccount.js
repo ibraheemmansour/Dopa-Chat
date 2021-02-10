@@ -16,7 +16,7 @@ import { setLoadingAction } from '../../redux/actions/globalActions';
 
 import Styles from './styles.js';
 
-class Login extends PureComponent {
+class CreateAccount extends PureComponent {
   constructor (props) {
     super(props);
 
@@ -85,33 +85,50 @@ class Login extends PureComponent {
               <Label style={Styles.Version} font={Settings.FONTS.HelveticaNeueThin}>{getVersion()}</Label>
             </View>
             <View style={Styles.MiddleContainer}>
-              <Label style={Styles.MainTitle} font={Settings.FONTS.HelveticaNeueThin}>Login</Label>
-              <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>USERNAME</Label>
-              <TextInput autoCapitalize="none" onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onUsernameChange(e)} style={[Styles.TextInput]}>
-                {`${this.state.username}`}
-              </TextInput>
-              <View style={Styles.CredentialSeparator}></View>
-              <View style={Styles.PasswordPretextArea}>
-                <Label style={Styles.PasswordPretext} font={Settings.FONTS.HelveticaNeueBold}>PASSWORD</Label>
+              <Label style={Styles.MainTitle} font={Settings.FONTS.HelveticaNeueThin}>CREATE ACCOUNT</Label>
+              <View>
+                <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>USERNAME</Label>
+                <TextInput autoCapitalize="none" onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onUsernameChange(e)} style={[Styles.TextInput]}>
+                  {`${this.state.username}`}
+                </TextInput>
               </View>
-              <TextInput autoCapitalize="none" secureTextEntry={true} onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onPasswordChange(e)} style={[Styles.TextInput, Styles.Password]}>
-                {`${this.state.password}`}
-              </TextInput>
+              <View style={Styles.CredentialSeparator}></View>
+              <View>
+                <View style={Styles.PasswordPretextArea}>
+                  <Label style={Styles.PasswordPretext} font={Settings.FONTS.HelveticaNeueBold}>PASSWORD</Label>
+                </View>
+                <TextInput autoCapitalize="none" secureTextEntry={true} onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onPasswordChange(e)} style={[Styles.TextInput, Styles.Password]}>
+                  {`${this.state.password}`}
+                </TextInput>
+              </View>
+              <View style={Styles.CredentialSeparator}></View>
+              <View>
+                <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>FIRST NAME</Label>
+                <TextInput autoCapitalize="none" onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onUsernameChange(e)} style={[Styles.TextInput]}>
+                  {`${this.state.username}`}
+                </TextInput>
+              </View>
+              <View style={Styles.CredentialSeparator}></View>
+              <View>
+                <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>LAST NAME</Label>
+                <TextInput autoCapitalize="none" onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onUsernameChange(e)} style={[Styles.TextInput]}>
+                  {`${this.state.username}`}
+                </TextInput>
+              </View>
+              <View style={Styles.CredentialSeparator}></View>
+              <View>
+                <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>DESCRIPTION</Label>
+                <TextInput autoCapitalize="none" onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onUsernameChange(e)} style={[Styles.TextInput]}>
+                  {`${this.state.username}`}
+                </TextInput>
+              </View>
               <View style={Styles.LoginButtonContainter}>
-                <TouchableHighlight onPress={() => this.login()} onLongPress={() => this.login()} style={Styles.LoginButton} underlayColor={Colors.DopaGreen} >
-                  <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.LoginButtonText]}>Sign In</Label>
-                </TouchableHighlight>
                 <TouchableHighlight onPress={() => this.createAccount()} onLongPress={() => this.createAccount()} style={Styles.LoginButton} underlayColor={Colors.DopaGreen} >
                   <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.LoginButtonText]}>Create Account</Label>
                 </TouchableHighlight>
               </View>
             </View>
           </KeyboardAvoidingView>
-          <View style={{width: Settings.WindowWidth, paddingTop: Settings.WindowHeight / 40, alignContent: 'center', justifyContent: 'center'}}>
-            <Label style={Styles.FootNote}>Our aim is simplicity and easy-use, few steps towards your mental relief.</Label>
-            <Label style={Styles.FootNote}>In DopaChat, you can chat to raise your Dopamine levels, the chemical specific for happiness. This platform allows you to connect with others who share your feelings, traumas or anxieties in a secure and private environment.</Label>
-            <Label style={[Styles.FootNote, {marginTop: Settings.WindowHeight / 40 }]}>Disclaimer, this platform does not replace professional help. If you suffer from any mental illnesses, consult a professional.</Label>
-          </View>
         </View>        
       </ScrollView>
     );
@@ -123,4 +140,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   dispatchSetLoadingAction: (showHide) => dispatch(setLoadingAction(showHide))
 }, dispatch)
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(null, mapDispatchToProps)(CreateAccount);
