@@ -9,7 +9,7 @@ namespace DopaChat.Models
     {
         public UserMapper()
         {
-            Property(a => a.ID).HasColumnAnnotation("ID", new IndexAnnotation(new[] { new IndexAttribute("ID") { IsUnique = true } }));
+            Property(a => a.Id).HasColumnAnnotation("Id", new IndexAnnotation(new[] { new IndexAttribute("Id") { IsUnique = true } }));
             Property(c => c.FirstName).IsRequired();
             Property(c => c.LastName).IsRequired();
             Property(c => c.Nickname).IsRequired();

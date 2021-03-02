@@ -9,7 +9,7 @@ namespace DopaChat.Models
     {
         public CityMapper()
         {
-            Property(a => a.ID).HasColumnAnnotation("ID", new IndexAnnotation(new[] { new IndexAttribute("ID") { IsUnique = true } }));
+            Property(a => a.Id).HasColumnAnnotation("Id", new IndexAnnotation(new[] { new IndexAttribute("ID") { IsUnique = true } }));
             Property(c => c.CityName).IsRequired();
             Property(c => c.City_ascii).IsOptional();
             Property(c => c.Latitude).IsOptional();

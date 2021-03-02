@@ -9,7 +9,7 @@ namespace DopaChat.Models
     {
         public KeywordMapper()
         {
-            Property(a => a.ID).HasColumnAnnotation("ID", new IndexAnnotation(new[] { new IndexAttribute("ID") { IsUnique = true } }));
+            Property(a => a.Id).HasColumnAnnotation("Id", new IndexAnnotation(new[] { new IndexAttribute("Id") { IsUnique = true } }));
             Property(c => c.Title).IsRequired();
         }
     }

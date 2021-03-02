@@ -30,7 +30,7 @@ class ConditionalNavigator extends Component {
 
   getInitialRouteName() {
     if (new Date(this.props.expiry) < (new Date())) {
-      return Settings.ScreenNames.Login;
+      return Settings.ScreenNames.CreateAccount;
     }
     
     return Settings.ScreenNames.Home;

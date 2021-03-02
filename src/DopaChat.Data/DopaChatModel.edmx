@@ -7,9 +7,9 @@
     <Schema Namespace="DopaChatModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Cities">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="CityName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="City_ascii" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Latitude" Type="decimal" Precision="18" Scale="0" Nullable="false" />
@@ -18,39 +18,39 @@
         </EntityType>
         <EntityType Name="Keywords">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="ID" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Id" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Languages">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="ID" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Id" Type="varchar" MaxLength="64" Nullable="false" />
           <Property Name="Value" Type="varchar" MaxLength="64" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Nickname" Type="nvarchar" MaxLength="32" Nullable="false" />
-          <Property Name="Password" Type="char" MaxLength="60" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="150" />
           <Property Name="Description" Type="text" Nullable="false" />
-          <Property Name="Languages" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Languages" Type="nvarchar" MaxLength="1000" />
           <Property Name="Keywords" Type="text" Nullable="false" />
-          <Property Name="CityId" Type="int" Nullable="false" />
+          <Property Name="CityId" Type="int" />
         </EntityType>
         <Association Name="FK_Users_Cities">
-          <End Role="Cities" Type="Self.Cities" Multiplicity="1" />
+          <End Role="Cities" Type="Self.Cities" Multiplicity="0..1" />
           <End Role="Users" Type="Self.Users" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Cities">
-              <PropertyRef Name="ID" />
+              <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Users">
               <PropertyRef Name="CityId" />
@@ -83,9 +83,9 @@
         </EntityContainer>
         <EntityType Name="City">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="CityName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="City_ascii" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Latitude" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
@@ -95,40 +95,40 @@
         </EntityType>
         <EntityType Name="Keyword">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="ID" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Language">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="ID" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="Value" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Nickname" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="60" FixedLength="true" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Languages" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Languages" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="Keywords" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="CityId" Type="Int32" Nullable="false" />
+          <Property Name="CityId" Type="Int32" />
           <NavigationProperty Name="City" Relationship="DopaChatModel.FK_Users_Cities" FromRole="User" ToRole="City" />
         </EntityType>
         <Association Name="FK_Users_Cities">
-          <End Type="DopaChatModel.City" Role="City" Multiplicity="1" />
+          <End Type="DopaChatModel.City" Role="City" Multiplicity="0..1" />
           <End Type="DopaChatModel.User" Role="User" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="City">
-              <PropertyRef Name="ID" />
+              <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="User">
               <PropertyRef Name="CityId" />
@@ -149,7 +149,7 @@
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="City_ascii" ColumnName="City_ascii" />
                 <ScalarProperty Name="CityName" ColumnName="CityName" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -157,7 +157,7 @@
             <EntityTypeMapping TypeName="DopaChatModel.Keyword">
               <MappingFragment StoreEntitySet="Keywords">
                 <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -165,7 +165,7 @@
             <EntityTypeMapping TypeName="DopaChatModel.Language">
               <MappingFragment StoreEntitySet="Languages">
                 <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -181,7 +181,7 @@
                 <ScalarProperty Name="Nickname" ColumnName="Nickname" />
                 <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
