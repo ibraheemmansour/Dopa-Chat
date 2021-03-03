@@ -32,11 +32,11 @@ namespace DopaChat.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("all/{country}")]
-        public IList<CityDto> GetCountryCities(string country)
+        [Route("all/{country_iso2}")]
+        public IList<CityDto> GetCountryCities(string country_iso2)
         {
             var country_cities = from city in db.Cities
-                                 where city.Country.ToLower() == country.ToLower()
+                                 where city.ISO2.ToLower() == country_iso2.ToLower()
                                  select city;
 
             return Mapper.Map<List<City>, List<CityDto>>(country_cities.ToList());

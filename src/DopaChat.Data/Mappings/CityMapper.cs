@@ -11,10 +11,15 @@ namespace DopaChat.Models
         {
             Property(a => a.Id).HasColumnAnnotation("Id", new IndexAnnotation(new[] { new IndexAttribute("ID") { IsUnique = true } }));
             Property(c => c.CityName).IsRequired();
-            Property(c => c.City_ascii).IsOptional();
-            Property(c => c.Latitude).IsOptional();
-            Property(c => c.Longitude).IsOptional();
+            Property(c => c.City_ASCII).IsRequired();
+            Property(c => c.Latitude).IsRequired();
+            Property(c => c.Longitude).IsRequired();
             Property(c => c.Country).IsRequired();
+            Property(c => c.ISO2).IsRequired();
+            Property(c => c.ISO3).IsRequired();
+            Property(c => c.AdminName).IsOptional();
+            Property(c => c.Capital).IsOptional();
+            Property(c => c.Population).IsOptional();
             HasMany(c => c.Users);
         }
     }

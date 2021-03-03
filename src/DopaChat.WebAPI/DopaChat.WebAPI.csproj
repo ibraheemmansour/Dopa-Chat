@@ -263,6 +263,7 @@
     <Compile Include="Classes\ErrorResponseHelper.cs" />
     <Compile Include="Classes\Extensions.cs" />
     <Compile Include="Classes\LoginBody.cs" />
+    <Compile Include="Controllers\KeywordController.cs" />
     <Compile Include="Controllers\CityController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\UserController.cs" />

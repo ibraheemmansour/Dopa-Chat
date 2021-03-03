@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import Settings from '../../config/settings.js';
 import Colors from '../../config/colors.js';
 import Images from '../../config/images.js';
-import { createAccount, getCities } from '../../config/client.js';
+import { createAccount, getCities, getKeywords } from '../../config/client.js';
 
 import Languages from '../../data/languages.json';
 import Countries from '../../data/countries.json';
@@ -33,13 +33,15 @@ class CreateAccount extends PureComponent {
       lastName: "Mansour",
       city: 'saida',
       description: "Fuck this country",
-      showLocations: false,
+      // showLocations: true,
       languages: [],
       selected_language: 'en',
       countries: [],
-      selected_country: null,
+      selected_country: 'AF',
       cities: [],
-      selected_city: null
+      selected_city: null,
+      keywords: [],
+      selected_keywords: [],
     }
   }
 
@@ -47,6 +49,7 @@ class CreateAccount extends PureComponent {
     this.props.dispatchSetLoadingAction(false);
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
 
+    this.populateKeywords();
     this.populateLanguages();
     this.populateCountries();
   }
@@ -74,6 +77,25 @@ class CreateAccount extends PureComponent {
     this.setState({ countries: countries });
   }
 
+  async populateKeywords() {
+    this.props.dispatchSetLoadingAction(true);
+    let app = this;
+    await this.props.dispatchGetKeywordsAction(function (keywords_data, error, response) {
+      app.props.dispatchSetLoadingAction(false);
+      if (keywords_data) {
+        let keywords = [];
+        keywords_data.forEach(keyword =>
+        {
+          keywords.push(<Picker.Item key={keyword.Id} label={keyword.Title} value={keyword.Id}/>);
+        });
+        app.setState({ keywords: keywords });
+      }
+      else {
+        Alert.alert('Connection Error', 'An error has occured, please try again.', [{ text: 'OK' }], { cancelable: true });
+      }
+    });    
+  }
+
   async createAccount() {
     this.props.dispatchSetLoadingAction(true);
     if (this.state.username == "" || this.state.password == "" || this.state.username == null || this.state.password == null) {
@@ -83,7 +105,7 @@ class CreateAccount extends PureComponent {
     }
 
     let app = this;
-    this.props.dispatchCreateAccountAction(this.state.username, this.state.password, this.state.firstName, this.state.lastName, this.state.description, function (data, error, response) {
+    await this.props.dispatchCreateAccountAction(this.state.username, this.state.password, this.state.firstName, this.state.lastName, this.state.description, function (data, error, response) {
       app.props.dispatchSetLoadingAction(false);
       if (data && data.access_token) {
         app.props.navigation.navigate(Settings.ScreenNames.Home);
@@ -125,24 +147,28 @@ class CreateAccount extends PureComponent {
     this.setState({ description: e.nativeEvent.text });
   }
 
-  async selectCountry(country) {
-    console.log(country);
+  async getSelectedCountryCities(country) {
+    this.setState({ selected_country: country });
     this.props.dispatchSetLoadingAction(true);
     let app = this;
-    this.props.dispatchGetCitiesAction(country, function (data, error, response) {
+    this.props.dispatchGetCitiesAction(country, function (cities_data, error, response) {
       app.props.dispatchSetLoadingAction(false);
-      if (data) {
-        // let cities = [];
-        // country.forEach(country =>
-        // {
-        //   countries.push(<Picker.Item key={country.code} label={country.name} value={country.code}/>);
-        // });
-        // this.setState({ countries: countries });
+      if (cities_data) {
+        let cities = [];
+        cities_data.forEach(city =>
+        {
+          cities.push(<Picker.Item key={city.Id} label={city.CityName} value={city.Id}/>);
+        });
+        app.setState({ cities: cities });
       }
       else {
         Alert.alert('Connection Error', 'An error has occured, please try again.', [{ text: 'OK' }], { cancelable: true });
       }
     });    
+  }
+
+  selectKeyword(keyword) {
+    console.log(keyword);
   }
 
   renderLanguages() {
@@ -160,7 +186,7 @@ class CreateAccount extends PureComponent {
     return (
       <View>
         <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>COUNTRY</Label>
-        <Picker selectedValue={this.state.selected_country} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, width: Settings.WindowWidth / 3, height: 50 }} onValueChange={(itemValue, itemIndex) => this.selectCountry(itemValue)}>
+        <Picker selectedValue={this.state.selected_country} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, width: Settings.WindowWidth / 3, height: 50 }} onValueChange={(itemValue, itemIndex) => this.getSelectedCountryCities(itemValue)}>
           {this.state.countries}
         </Picker>
       </View>
@@ -176,6 +202,30 @@ class CreateAccount extends PureComponent {
         </Picker>
       </View>
     )
+  }
+
+  renderKeywords() {
+    return (
+      <View>
+        <Picker selectedValue={this.state.selected_keywords} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, height: 50 }} onValueChange={(itemValue, itemIndex) => this.selectKeyword(itemValue)}>
+          {this.state.keywords}
+        </Picker>
+      </View>
+    )
+  }
+
+  renderSelectedKeywords() {
+    let keywords = []
+    this.state.selected_keywords.forEach(keyword => {
+      keywords.push(<Label style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, height: 50 }}>{keyword.Title}</Label>);
+    });
+    return (
+      <View>
+        <View style={Styles.CredentialSeparator}></View>
+        <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>SELECTED KEYWORDS</Label>
+        {keywords}
+      </View>
+    );
   }
 
   render() {
@@ -222,10 +272,14 @@ class CreateAccount extends PureComponent {
             </View>
             <View style={Styles.CredentialSeparator}></View>
             {this.renderLanguages()}
-            <Switch trackColor={{ false: "#767577", true: "#81b0ff" }} thumbColor={this.state.showLocations ? "#f5dd4b" : "#f4f3f4"}
-              ios_backgroundColor="#3e3e3e" onValueChange={val => this.setState({ showLocations: val })} value={this.state.showLocations}
-            />
-            { this.state.showLocations &&
+            {/*
+            <View style={Styles.CredentialSeparator}></View>
+             <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Label style={{fontSize: Settings.IsTablet ? 16 : 14, marginRight: 15}}>Show Location</Label>
+              <Switch trackColor={{ false: Colors.Gray3, true: Colors.DopaGreen }} thumbColor={this.state.showLocations ? Colors.DopaGreenLight : Colors.White}
+              ios_backgroundColor="#3e3e3e" onValueChange={val => this.setState({ showLocations: val })} value={this.state.showLocations} />
+            </View> */}
+            { /* { this.state.showLocations*/ true && 
               <View>
                 <View style={Styles.CredentialSeparator}></View>
                 <View>
@@ -236,6 +290,13 @@ class CreateAccount extends PureComponent {
                 </View>
               </View>
             }
+            <View>
+              <View style={Styles.CredentialSeparator}></View>
+              <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>KEYWORDS</Label>
+              <Label style={{marginBottom: 15, textAlign: 'justify', fontSize: Settings.IsTablet ? 14 : 12, marginRight: 15}}>Add key words related to your problem. These words will be used for the matching process.</Label>
+              {this.renderKeywords()}
+            </View>
+            {this.state.selected_keywords.length > 0 ? this.renderSelectedKeywords() : null}
             <View style={Styles.CredentialSeparator}></View>
             <View style={Styles.TextAreaContainer} >
               <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>DESCRIPTION</Label>
@@ -258,6 +319,7 @@ class CreateAccount extends PureComponent {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   dispatchGetCitiesAction: getCities,
+  dispatchGetKeywordsAction: getKeywords,
   dispatchCreateAccountAction: createAccount,
   dispatchSetLoadingAction: (showHide) => dispatch(setLoadingAction(showHide))
 }, dispatch)

@@ -9,12 +9,17 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="CityName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="City_ascii" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Latitude" Type="decimal" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="Longitude" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="City_ASCII" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Latitude" Type="float" Nullable="false" />
+          <Property Name="Longitude" Type="float" Nullable="false" />
           <Property Name="Country" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ISO2" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="ISO3" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="AdminName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Capital" Type="nvarchar" MaxLength="50" />
+          <Property Name="Population" Type="float" />
+          <Property Name="Id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Keywords">
           <Key>
@@ -85,12 +90,17 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="CityName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="City_ascii" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Latitude" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="Longitude" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="City_ASCII" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Latitude" Type="Double" Nullable="false" />
+          <Property Name="Longitude" Type="Double" Nullable="false" />
           <Property Name="Country" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ISO2" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="ISO3" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="AdminName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Capital" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Population" Type="Double" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Users" Relationship="DopaChatModel.FK_Users_Cities" FromRole="City" ToRole="User" />
         </EntityType>
         <EntityType Name="Keyword">
@@ -144,12 +154,17 @@
           <EntitySetMapping Name="Cities">
             <EntityTypeMapping TypeName="DopaChatModel.City">
               <MappingFragment StoreEntitySet="Cities">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Capital" ColumnName="Capital" />
+                <ScalarProperty Name="AdminName" ColumnName="AdminName" />
+                <ScalarProperty Name="ISO3" ColumnName="ISO3" />
+                <ScalarProperty Name="ISO2" ColumnName="ISO2" />
                 <ScalarProperty Name="Country" ColumnName="Country" />
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />
-                <ScalarProperty Name="City_ascii" ColumnName="City_ascii" />
+                <ScalarProperty Name="City_ASCII" ColumnName="City_ASCII" />
                 <ScalarProperty Name="CityName" ColumnName="CityName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
