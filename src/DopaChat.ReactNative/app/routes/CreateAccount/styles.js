@@ -16,9 +16,9 @@ const styles = StyleSheet.create({
     PasswordPretextArea: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
     Password: { letterSpacing: 1.4 },
     CredentialSeparator: { marginBottom: Settings.WindowHeight / 40 },
-    LoginButtonContainter: { flexDirection: 'row', justifyContent: 'space-around', marginTop: Settings.WindowHeight / 20 },
+    LoginButtonContainter: { flexDirection: 'row', justifyContent: 'space-around', marginTop: Settings.WindowHeight / 50 },
     LoginButton: { justifyContent: 'center', alignItems: 'center', width: Settings.WindowWidth / 3, height: Settings.IsTablet ? 54 : 48, backgroundColor: Colors.DopaGreen, borderRadius: 5 },
-    LoginButtonText: { color: Colors.White, textAlign: "center", fontSize: Settings.IsTablet ? 16 : 14 },
+    LoginButtonText: { color: Colors.White, fontSize: Settings.IsTablet ? 16 : 14 },
     TextAreaContainer: { borderColor: Colors.Gray2 },
     TextArea: { height: 150 }
 });

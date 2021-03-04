@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     MainTitle: { marginBottom: Settings.IsTablet ? 27 : 30, fontSize: Settings.IsTablet ? 32 : 28, color: Colors.DopaGreen, marginTop: 4 },
     UsernamePretext: { fontSize: Settings.IsTablet ? 16 : 14, marginBottom: 6 },
     PasswordPretext: { fontSize: Settings.IsTablet ? 16 : 14 },
-    TextInput: { fontFamily: Settings.FONTS.HelveticaNeueLight, borderRadius: 5, borderColor: Colors.DopaGreen, height: Settings.WindowHeight / 17, borderWidth: 1, fontSize: 14, paddingLeft: 15 },
+    TextInput: { backgroundColor: Colors.White, fontFamily: Settings.FONTS.HelveticaNeueLight, borderRadius: 5, borderColor: Colors.DopaGreen, height: Settings.WindowHeight / 17, borderWidth: 1, fontSize: 14, paddingLeft: 15 },
     PasswordPretextArea: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
     Password: { letterSpacing: 1.4 },
     CredentialSeparator: { marginBottom: Settings.WindowHeight / 40 },

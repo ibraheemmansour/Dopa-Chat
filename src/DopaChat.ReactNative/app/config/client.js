@@ -20,14 +20,17 @@ export function login(username, password, callback) {
     }
 }
 
-export function createAccount(username, password, firstName, lastName, description, callback) {
+export function createAccount(user, callback) {
     return dispatch => {
         return axios.post(Settings.WEB_API_URI + 'user', {
-            nickname: username,
-            password: password,
-            firstName: firstName,
-            lastName: lastName,
-            description: description
+            nickname: user.username,
+            password: user.password,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            description: user.description,
+            languages: user.languages,
+            keywords: user.keywords,
+            cityId: user.cityId
         })
         .then(function (response) {
             callback(response.data, null, response);
