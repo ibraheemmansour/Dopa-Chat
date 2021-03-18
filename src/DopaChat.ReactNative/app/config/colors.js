@@ -6,7 +6,8 @@ const Colors = {
 	DopaGreenLight: '#a9d4a9',
 	Gray1: '#e4e4e4',
 	Gray2: '#e0e1e1',
-	Gray3: '#767577'
+	Gray3: '#767577',
+	Gray4: '#8c8c8c'
 };
 
 export default Colors;

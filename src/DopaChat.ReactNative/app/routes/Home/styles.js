@@ -8,10 +8,16 @@ const styles = StyleSheet.create({
     UpperView: { alignItems: 'center', marginTop: Settings.WindowHeight / 20 },
     TopImage: { width: Settings.WindowWidth / 1.8, height: Settings.WindowWidth / 2.3 },
     Version: { paddingTop: 5, marginBottom: Settings.IsTablet ? 17 : 20, fontSize: Settings.IsTablet ? 12 : 16 },
-    MiddleContainer: { marginTop: Settings.WindowHeight / 20, borderRadius: 5, padding: 20, marginLeft: Settings.IsTablet ? Settings.WindowWidth / 6 : Settings.WindowWidth / 17, marginRight: Settings.IsTablet ? Settings.WindowWidth / 6 : Settings.WindowWidth / 17 },
+    MiddleContainer: { marginLeft: Settings.IsTablet ? Settings.WindowWidth / 6 : Settings.WindowWidth / 17, marginRight: Settings.IsTablet ? Settings.WindowWidth / 6 : Settings.WindowWidth / 17 },
+    UsernamePretext: { fontSize: Settings.IsTablet ? 16 : 14, marginBottom: 6 },
+    Separator: { marginBottom: Settings.WindowHeight / 40 },
+    Title: { textAlign: "center", marginBottom: Settings.IsTablet ? 17 : 20, fontSize: Settings.IsTablet ? 16 : 18 },
     LoginButtonContainter: { flexDirection: 'row', justifyContent: 'space-around', marginTop: Settings.WindowHeight / 20 },
-    LoginButton: { justifyContent: 'center', alignItems: 'center', width: Settings.WindowWidth / 3, height: Settings.IsTablet ? 54 : 48, backgroundColor: Colors.DopaGreen, borderRadius: 5 },
-    LoginButtonText: { textAlign: "center", fontSize: Settings.IsTablet ? 32 : 28 },
+    LoginButton: { justifyContent: 'center', alignItems: 'center', width: Settings.WindowWidth / 3.8, height: Settings.IsTablet ? 54 : 48, backgroundColor: Colors.DopaGreen, borderRadius: 5 },
+    LoginButtonText: { color: Colors.White, textAlign: "center", fontSize: Settings.IsTablet ? 20 : 18 },
+    PersonTouchable: {marginBottom: 10, marginLeft: 5, marginRight: 5},
+    PersonContainer: {backgroundColor: Colors.Gray4, borderRadius: 80, width: Settings.WindowWidth / 3.6, height: Settings.WindowWidth / 3.6, alignItems: 'center', justifyContent: 'center'},
+    PersonTitle: {padding: 10, textAlign: 'center', fontSize: 14, fontWeight: 'bold', color: Colors.White },
 });
 
 export default styles;

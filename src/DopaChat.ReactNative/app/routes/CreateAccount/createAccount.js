@@ -1,12 +1,11 @@
 import React, { PureComponent } from 'react';
-import { Keyboard, View, Image, Alert, Switch, KeyboardAvoidingView, ScrollView, TextInput, BackHandler, TouchableHighlight } from 'react-native';
+import { Keyboard, View, Image, Alert, ScrollView, TextInput, BackHandler, TouchableHighlight } from 'react-native';
 import { Picker } from "@react-native-community/picker";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getVersion } from 'react-native-device-info';
 import _ from 'lodash';
-import Icon from 'react-native-vector-icons/Feather';
 
 import Settings from '../../config/settings.js';
 import Colors from '../../config/colors.js';

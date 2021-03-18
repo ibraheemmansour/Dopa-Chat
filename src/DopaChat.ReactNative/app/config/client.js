@@ -49,6 +49,16 @@ export function getUsers(callback) {
     });
 }
 
+export function getUser(id, callback) {
+    return dispatch => {
+        axios.get(Settings.WEB_API_URI + 'user/' + id).then(function (response) {
+            callback(response.data, null, response);
+        }).catch(function (error) {
+            callback(null, error, null);
+        });
+    }
+}
+
 export function getCities(country, callback) {
     return dispatch => {
         axios.get(Settings.WEB_API_URI + 'city/all/' + country)
@@ -66,7 +76,25 @@ export function getKeywords(callback) {
         .then(function (response) {
             callback(response.data, null, response);
         }).catch(function (error) {
+            console.log(error);
             callback(null, error, null);
+        });
+    }
+}
+
+export function searchPeople(query, callback) {
+    return dispatch => {
+        return axios.post(Settings.WEB_API_URI + 'user/search', {
+            id: query.id,
+            country: query.country,
+            keywords: query.keywords,
+            city: query.city
+        })
+        .then(function (response) {
+            callback(response.data, null, response);
+        })
+        .catch(function (error) {
+            callback(null, error.message, null);
         });
     }
 }

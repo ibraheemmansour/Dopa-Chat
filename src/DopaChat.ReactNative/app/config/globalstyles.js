@@ -25,7 +25,7 @@ const GlobalStyles = StyleSheet.create({
     OverallWrapperStyle: { backgroundColor: "transparent" },
     Modal: { borderTopLeftRadius: 10, borderTopRightRadius: 10, backgroundColor: Colors.White, flex: 1, marginTop: Platform.OS == "android" ? Settings.WindowHeight / 2 : 0 },
     ModalContainer: { backgroundColor: Platform.OS == "android" ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0)" },
-    BusyContainer: { backgroundColor: "rgba(0, 0, 0, 0.3)" },
+    BusyContainer: { backgroundColor: "rgba(0, 0, 0, 0.6)" },
     GrayHandleContainer: { borderTopLeftRadius: 10, borderTopRightRadius: 10, backgroundColor: Colors.Gray_TabsBackground, paddingTop: 15, paddingBottom: 15, justifyContent: 'center', alignItems: 'center' },
     GrayHandle: { width: 40, height: 6, backgroundColor: Colors.Gray_SortHandle },
     TitleText: { fontSize: Settings.IsTablet ? 30 : 28, color: Colors.Purple_Text },

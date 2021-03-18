@@ -260,6 +260,7 @@
     <Compile Include="AutoMapperProfiles\LanguageProfile.cs" />
     <Compile Include="AutoMapperProfiles\CityProfile.cs" />
     <Compile Include="AutoMapperProfiles\UserProfile.cs" />
+    <Compile Include="Classes\SearchQuery.cs" />
     <Compile Include="Classes\ErrorResponseHelper.cs" />
     <Compile Include="Classes\Extensions.cs" />
     <Compile Include="Classes\LoginBody.cs" />

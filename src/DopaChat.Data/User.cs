@@ -36,6 +36,8 @@ public partial class User
 
     public string Keywords { get; set; }
 
+    public string Country { get; set; }
+
     public Nullable<int> CityId { get; set; }
 
 
