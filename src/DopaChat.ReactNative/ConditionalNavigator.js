@@ -12,6 +12,7 @@ import SplashScreen from './app/routes/Splash';
 import LoginScreen from './app/routes/Login';
 import CreateAccountScreen from './app/routes/CreateAccount';
 import HomeScreen from './app/routes/Home';
+import ResultsScreen from './app/routes/Results';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -30,10 +31,10 @@ class ConditionalNavigator extends Component {
 
   getInitialRouteName() {
     if (new Date(this.props.expiry) < (new Date())) {
-      return Settings.ScreenNames.Home;
+      return Settings.ScreenNames.Results;
     }
     
-    return Settings.ScreenNames.Home;
+    return Settings.ScreenNames.Results;
   }
 
   getStackNavigator() {
@@ -58,6 +59,12 @@ class ConditionalNavigator extends Component {
       },
       HomeScreen: {
         screen: HomeScreen,
+        navigationOptions: {
+          headerShown: false
+        }
+      },
+      ResultsScreen: {
+        screen: ResultsScreen,
         navigationOptions: {
           headerShown: false
         }

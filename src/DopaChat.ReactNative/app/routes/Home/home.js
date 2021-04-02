@@ -64,6 +64,7 @@ class Home extends PureComponent {
     this.props.dispatchSetLoadingAction(true);
     let app = this;
     await this.props.dispatchGetUserAction(this.state.user.id, function (user_data, error, response) {
+      console.log(user_data);
       if (user_data) {
         app.setState({ selected_country: user_data.country, user: user_data });
         app.getSelectedCountryCities(user_data.country);
@@ -113,7 +114,7 @@ class Home extends PureComponent {
         keywords_data.forEach(keyword => {
           app.state.user.keywords.split(',').forEach(element => {
             if (keyword.id == element) {
-                keywords.push({ id: keyword.id, title: keyword.title, value: true });
+                keywords.push({ key: keyword.id, id: keyword.id, title: keyword.title, value: true });
               }
             });
           });
@@ -134,35 +135,35 @@ class Home extends PureComponent {
   }
 
   async searchPeople() {
-    let app = this;
-    app.props.dispatchSetLoadingAction(true);
-    app.setState({ people: [] });
+    console.log(1);
+    var people = [{"id":1009,"firstName":"Reem","lastName":"Mansour","nickname":"reem1992","password":"root","email":"reem@cc.com","description":"I'm an alci","languages":"en","keywords":"performance_anxiety","country":"LB","cityId":1422847713},{"id":1011,"firstName":"Fahed","lastName":"Geagea","nickname":"fahed1990","password":"root","email":"fahed@lf.com","description":"Ana fene2e","languages":"en","keywords":"performance_anxiety,insomnia","country":"LB","cityId":1422847713},{"id":1012,"firstName":"Hoda","lastName":"Ghamlouch","nickname":"hoda1966","password":"root","email":"hoda@fouani.com","description":"Help me!","languages":"en","keywords":"performance_anxiety","country":"LB","cityId":1422847713}];
+    this.props.navigation.navigate({routeName: Settings.ScreenNames.Results, params: { people: people } });
 
-    var searchQuery = { 
-      id: this.state.user.id,
-      country: this.state.selected_country,
-      city: this.state.selected_city,
-      keywords: this.state.keywords.filter(keyword => { return keyword.value == true })
-    };
+    // let app = this;
+    // app.props.dispatchSetLoadingAction(true);
 
-    await this.props.dispatchSearchPeopleAction(searchQuery, function (data, error, response) {
-      app.props.dispatchSetLoadingAction(false);
-      if (data) {
-        if (data.length > 0)
-        {
-          app.setState({ people: data });
-        } else {
-          Alert.alert('No Results', 'There are no people matching your search criteria.', [{ text: 'OK' }], { cancelable: true });
-        }
-      }
-      else {
-        console.log(error);
-      }
-    });
-  }
+    // var searchQuery = { 
+    //   id: this.state.user.id,
+    //   country: this.state.selected_country,
+    //   city: this.state.selected_city,
+    //   keywords: this.state.keywords.filter(keyword => { return keyword.value == true })
+    // };
 
-  onClickPerson(person) {
-    console.log(person);
+    // await this.props.dispatchSearchPeopleAction(searchQuery, function (data, error, response) {
+    //   app.props.dispatchSetLoadingAction(false);
+    //   if (data) {
+    //     if (data.length > 0)
+    //     {
+    //       app.props.navigation.navigate(Settings.ScreenNames.Results, data);
+    //       console.log(JSON.stringify(data));
+    //     } else {
+    //       Alert.alert('No Results', 'There are no people matching your search criteria.', [{ text: 'OK' }], { cancelable: true });
+    //     }
+    //   }
+    //   else {
+    //     console.log(error);
+    //   }
+    // });
   }
 
   renderCountries() {
@@ -248,7 +249,6 @@ class Home extends PureComponent {
               <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.LoginButtonText]}>Search</Label>
             </TouchableHighlight>
           </View>
-          {this.renderPeople()}
         </KeyboardAvoidingView>
       </View>
     );

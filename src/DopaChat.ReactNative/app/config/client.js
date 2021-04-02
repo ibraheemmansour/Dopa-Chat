@@ -51,6 +51,7 @@ export function getUsers(callback) {
 
 export function getUser(id, callback) {
     return dispatch => {
+        console.log(Settings.WEB_API_URI + 'user/' + id);
         axios.get(Settings.WEB_API_URI + 'user/' + id).then(function (response) {
             callback(response.data, null, response);
         }).catch(function (error) {
