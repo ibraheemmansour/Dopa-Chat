@@ -12,6 +12,7 @@ export function login(username, password, callback) {
             password: password
         })
         .then(function (response) {
+            dispatch(loginSuccessAction(response.data.access_token));
             callback(response.data, null, response);
         })
         .catch(function (error) {

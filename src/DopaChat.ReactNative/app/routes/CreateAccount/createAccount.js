@@ -20,6 +20,7 @@ import Label from '../../components/Label';
 import { setLoadingAction } from '../../redux/actions/globalActions';
 
 import Styles from './styles.js';
+import GlobalStyles from '../../config/globalstyles.js';
 
 class CreateAccount extends PureComponent {
   constructor (props) {
@@ -55,7 +56,7 @@ class CreateAccount extends PureComponent {
   }
 
   handleBackPress = () => {
-    BackHandler.exitApp();
+    this.props.navigation.navigate(Settings.ScreenNames.Login);
     return true;
   }
 
@@ -79,10 +80,10 @@ class CreateAccount extends PureComponent {
   }
 
   async populateKeywords() {
-    this.props.dispatchSetLoadingAction(true);
+    //this.props.dispatchSetLoadingAction(true);
     let app = this;
     await this.props.dispatchGetKeywordsAction(function (keywords_data, error, response) {
-      app.props.dispatchSetLoadingAction(false);
+      //app.props.dispatchSetLoadingAction(false);
       if (keywords_data) {
         let keywords = [];
         keywords_data.forEach(keyword =>
@@ -161,10 +162,10 @@ class CreateAccount extends PureComponent {
 
   async getSelectedCountryCities(country) {
     this.setState({ selected_country: country });
-    this.props.dispatchSetLoadingAction(true);
+    //this.props.dispatchSetLoadingAction(true);
     let app = this;
     this.props.dispatchGetCitiesAction(country, function (cities_data, error, response) {
-      app.props.dispatchSetLoadingAction(false);
+      //app.props.dispatchSetLoadingAction(false);
       if (cities_data) {
         let cities = [];
         cities_data.forEach(city =>
@@ -239,8 +240,9 @@ class CreateAccount extends PureComponent {
 
   renderSelectedKeywords() {
     let keywords = []
-    this.state.selected_keywords.forEach(keyword => {
-      keywords.push(<Label key={keyword.props.value} style={{ backgroundColor: Colors.White }}>{keyword.props.label}</Label>);
+    this.state.selected_keywords.forEach((keyword, index) => {
+      console.log(index);
+      keywords.push(<Label key={index} style={{ backgroundColor: Colors.White }}>{keyword.props.label}</Label>);
     });
     return (
       <View>
@@ -253,13 +255,12 @@ class CreateAccount extends PureComponent {
 
   render() {
     return (
-      <ScrollView style={{ backgroundColor: Colors.BackgroundColor, paddingTop: Settings.WindowHeight / 320 }}>
-        <View>
-          <View style={Styles.UpperView}>
-            <Image style={Styles.GroupedLogo} source={Images.Logo} />
-            <Label style={Styles.Version} font={Settings.FONTS.HelveticaNeueThin}>{getVersion()}</Label>
-          </View>
-            <View style={Styles.MiddleContainer}>
+      <ScrollView style={GlobalStyles.Container}>
+        <View style={GlobalStyles.UpperView}>
+          <Image style={GlobalStyles.GroupedLogo} source={Images.Logo} />
+          <Label style={GlobalStyles.Version} font={Settings.FONTS.HelveticaNeueThin}>v{getVersion()}</Label>
+        </View>
+        <View style={Styles.MiddleContainer}>
               <Label style={Styles.MainTitle} font={Settings.FONTS.HelveticaNeueThin}>REGISTER</Label>
               <View>
                 <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>USERNAME</Label>
@@ -337,7 +338,6 @@ class CreateAccount extends PureComponent {
                 </TouchableHighlight>
               </View>           
             </View>
-          </View>
       </ScrollView>
     );
   }

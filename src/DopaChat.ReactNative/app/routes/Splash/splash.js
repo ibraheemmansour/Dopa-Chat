@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { View, Image } from 'react-native';
 
 import Settings from '../../config/settings.js';
-import Colors from '../../config/colors.js';
 import Images from '../../config/images.js';
 import Label from '../../components/Label.js';
+import GlobalStyles from '../../config/globalstyles.js';
 
 import Styles from './styles.js';
 
@@ -18,12 +18,12 @@ export default class Splash extends Component {
 
   render() {
     return (
-      <View renderToHardwareTextureAndroid={true} style={Styles.Container}>
-        <View style={{flex: 2, justifyContent: 'center', paddingTop: Settings.WindowHeight / 6}}>
-          <Image style={Styles.GroupedLogo} source={Images.Logo} />
+      <View renderToHardwareTextureAndroid={true} style={Styles.MainContainer}>
+        <View style={Styles.LogoContainer}>
+          <Image style={Styles.GroupedLogo} source={Images.Logo} />          
         </View>
-        <View style={{flex: 0, justifyContent: 'flex-end', paddingBottom: Settings.WindowHeight / 6}}>
-          <Label style={{fontSize: 14, color: Colors.DopaGreen, textAlign: 'center', width: Settings.WindowWidth / 1.2}}>Chat to raise your Dopamine levels, the chemical specific for happiness</Label>
+        <View style={Styles.MessageContainer}>
+          <Label style={Styles.Message}>Chat to raise your Dopamine levels, the chemical specific for happiness</Label>
         </View>
       </View>
     );

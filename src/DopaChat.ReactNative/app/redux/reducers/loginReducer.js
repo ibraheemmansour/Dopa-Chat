@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { persistReducer } from 'redux-persist';
 
 import { LOGIN_SUCCESS, LOG_OUT } from '../actions/loginActions';
-import Utils from '../../config/utils'
+import Utils from '../../config/utils';
 
 const initialState = {
   access_token: null,

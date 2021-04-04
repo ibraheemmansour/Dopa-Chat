@@ -1,21 +1,29 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 
 import { createAppContainer, StackActions, NavigationActions } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
+import { createBottomTabNavigator } from "react-navigation-tabs";
 
+import { setTabScreenNameAction } from './app/redux/actions/globalActions';
 import { logoutAction } from './app/redux/actions/loginActions';
 
 import Settings from './app/config/settings.js';
 
 import SplashScreen from './app/routes/Splash';
 import LoginScreen from './app/routes/Login';
-import CreateAccountScreen from './app/routes/CreateAccount';
 import HomeScreen from './app/routes/Home';
-import ResultsScreen from './app/routes/Results';
+import SearchScreen from './app/routes/Search';
+import ChatsScreen from './app/routes/Chats';
+import AccountScreen from './app/routes/Account';
+import LogoutScreen from './app/routes/Logout';
+import CreateAccountScreen from './app/routes/CreateAccount';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Images from './app/config/images';
+import GlobalStyles from './app/config/globalstyles';
+import Colors from './app/config/colors';
 
 class ConditionalNavigator extends Component {
   constructor(props) {
@@ -26,12 +34,13 @@ class ConditionalNavigator extends Component {
   }
 
   componentDidMount() {
+    this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.Home);
     this.AppNavigator = createAppContainer(this.getStackNavigator());
   }
 
   getInitialRouteName() {
     if (new Date(this.props.expiry) < (new Date())) {
-      return Settings.ScreenNames.Home;
+      return Settings.ScreenNames.Login;
     }
     
     return Settings.ScreenNames.Home;
@@ -39,6 +48,12 @@ class ConditionalNavigator extends Component {
 
   getStackNavigator() {
     const StackNavigator = createStackNavigator({
+      HomeScreen: {
+        screen: this.getTabNavigator(),
+        navigationOptions: {
+          headerShown: false
+        }
+      },
       SplashScreen: {
         screen: SplashScreen,
         navigationOptions: {
@@ -56,19 +71,7 @@ class ConditionalNavigator extends Component {
         navigationOptions: {
           headerShown: false
         }
-      },
-      HomeScreen: {
-        screen: HomeScreen,
-        navigationOptions: {
-          headerShown: false
-        }
-      },
-      ResultsScreen: {
-        screen: ResultsScreen,
-        navigationOptions: {
-          headerShown: false
-        }
-      },
+      }
     }, {
       initialRouteName: Settings.ScreenNames.SplashScreen,
       initialRouteParams: {
@@ -81,6 +84,88 @@ class ConditionalNavigator extends Component {
 
     this.setState({ navigatorInitialized: true });
     return StackNavigator;
+  }
+
+  getTabNavigator() {
+    const TabNavigator = createBottomTabNavigator({
+      HomeScreen: {
+        screen: HomeScreen,
+        navigationOptions: {
+          title: "Home",
+          tabBarIcon: (options) => !options.focused ? (<Image source={Images.Tab_Home} style={GlobalStyles.TabIcon} />) : (<Image source={Images.Tab_Home_Selected} style={GlobalStyles.TabIcon} />),
+          tabBarOnPress: (scene, jumpToIndex) => {
+            this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.Home);
+            scene.defaultHandler();
+          }
+        }
+      },
+      SearchScreen: {
+        screen: SearchScreen,
+        navigationOptions: {
+          title: "Search",
+          tabBarIcon: (options) => !options.focused ? (<Image source={Images.Tab_Search} style={GlobalStyles.TabIcon} />) : (<Image source={Images.Tab_Search_Selected} style={GlobalStyles.TabIcon} />),
+          tabBarOnPress: (scene, jumpToIndex) => {
+            this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.Search);
+            scene.defaultHandler();
+          }
+        }
+      },     
+      ChatsScreen: {
+        screen: ChatsScreen,
+        navigationOptions: {
+          title: "Chats",
+          tabBarIcon: (options) => !options.focused ? (<Image source={Images.Tab_Chats} style={GlobalStyles.TabIcon} />) : (<Image source={Images.Tab_Chats_Selected} style={GlobalStyles.TabIcon} />),
+          tabBarOnPress: (scene, jumpToIndex) => {
+            this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.Chats);
+            scene.defaultHandler();
+          }
+        }
+      },
+      AccountScreen: {
+        screen: AccountScreen,
+        navigationOptions: {
+          title: "Account",
+          tabBarIcon: (options) => !options.focused ? (<Image source={Images.Tab_Account} style={GlobalStyles.TabIcon} />) : (<Image source={Images.Tab_Account_Selected} style={GlobalStyles.TabIcon} />),
+          tabBarOnPress: (scene, jumpToIndex) => {
+            this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.Account);
+            scene.defaultHandler();
+          }
+        }
+      },
+      LogoutScreen: {
+        screen: LogoutScreen,
+        navigationOptions: {
+          title: "Logout",
+          tabBarIcon: (<Image source={Images.Tab_Logout} style={GlobalStyles.TabIcon} />),
+          tabBarOnPress: (scene, jumpToIndex) => {
+            this.props.dispatchLogoutAction();
+            const resetAction = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: Settings.ScreenNames.Login })],
+            });
+            scene.navigation.dispatch(resetAction);
+          }
+        }
+      }
+    }, {
+      tabBarOptions: {
+        activeTintColor: Colors.DopaGreen,
+        tabStyle: { padding: 0, marginBottom: 16, marginTop: 16 },
+        labelStyle: { fontSize: Settings.IsTablet ? 12 : 11, fontFamily: Settings.FONTS.HelveticaNeueBold },
+        allowFontScaling: true,
+        style: {
+          backgroundColor: Colors.Gray2, height: 83,
+          borderTopWidth: 0,
+          ...Platform.select({
+            ios: { shadowColor: Colors.Gray0, shadowOffset: { width: 0, height: 1 }, shadowRadius: 10 }
+          })
+        }
+      },
+      initialRouteName: Settings.ScreenNames.Home,
+      tabBarPosition: "bottom",
+      backBehavior: "none"
+    });
+    return TabNavigator;
   }
 
   render() {
@@ -100,6 +185,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
+  dispatchSetTabScreenNameAction: (bool) => dispatch(setTabScreenNameAction(bool)),
   dispatchLogoutAction: () => dispatch(logoutAction())
 }, dispatch)
 

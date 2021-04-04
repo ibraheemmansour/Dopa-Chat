@@ -3,25 +3,25 @@ import { Keyboard, View, Image, Alert, KeyboardAvoidingView, ScrollView, TextInp
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getVersion } from 'react-native-device-info';
 
 import Settings from '../../config/settings.js';
 import Colors from '../../config/colors.js';
-import Images from '../../config/images.js';
 import { login } from '../../config/client.js';
 
 import Label from '../../components/Label';
+import Header from '../../components/Header';
 
 import { setLoadingAction } from '../../redux/actions/globalActions';
 
 import Styles from './styles.js';
+import GlobalStyles from '../../config/globalstyles.js';
 
 class Login extends PureComponent {
   constructor (props) {
     super(props);
 
     this.state = {
-      username: "ibraheem1992",
+      username: "C22456342",
       password: "root"
     }
   }
@@ -38,7 +38,7 @@ class Login extends PureComponent {
 
   async login() {
     this.props.dispatchSetLoadingAction(true);
-    if (this.state.username == "" || this.state.password == "" || this.state.username == null || this.state.password == null) {
+    if (this.state.username == '' || this.state.password == '' || this.state.username == null || this.state.password == null) {
       Alert.alert('Field missing', 'Make sure all fields are entered.', [{ text: 'OK' }], { cancelable: true });
       this.props.dispatchSetLoadingAction(false);
       return;
@@ -47,14 +47,18 @@ class Login extends PureComponent {
     let app = this;
     this.props.dispatchLoginAction(this.state.username, this.state.password, function (data, error, response) {
       app.props.dispatchSetLoadingAction(false);
+      console.log(data);
+      console.log(data && data.access_token);
       if (data && data.access_token) {
+        console.log(data);
+        console.log(data && data.access_token);
         app.props.navigation.navigate(Settings.ScreenNames.Home);
       }
       else {
         if (error.includes("400")) {
           Alert.alert('Authentication Error', 'Incorrect credentials.', [{ text: 'OK' }], { cancelable: true });
         } else if (error.includes("404"))  {
-          Alert.alert('Authentication Error', 'User not found.', [{ text: 'OK' }], { cancelable: true });
+          Alert.alert('Authentication Error', 'The username entered does not exist.', [{ text: 'OK' }], { cancelable: true });
         }
         else {
           Alert.alert('Authentication Error', 'Error occured during login, please try again.', [{ text: 'OK' }], { cancelable: true });
@@ -77,43 +81,36 @@ class Login extends PureComponent {
 
   render() {
     return (
-      <ScrollView style={{ backgroundColor: Colors.BackgroundColor, paddingTop: Settings.WindowHeight / 120 }}>
-        <View>
-          <KeyboardAvoidingView keyboardVerticalOffset={30} behavior="position">
-            <View style={Styles.UpperView}>
-              <Image style={Styles.GroupedLogo} source={Images.Logo} />
-              <Label style={Styles.Version} font={Settings.FONTS.HelveticaNeueThin}>{getVersion()}</Label>
+      <View style={GlobalStyles.Container} >
+        <KeyboardAvoidingView keyboardVerticalOffset={30} behavior="position">
+          <Header />
+          <View style={Styles.MiddleContainer}>
+            <Label style={Styles.MainTitle} font={Settings.FONTS.HelveticaNeueThin}>Login</Label>
+            <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>USERNAME</Label>
+            <TextInput autoCapitalize="none" onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onUsernameChange(e)} style={[Styles.TextInput]}>
+              {`${this.state.username}`}
+            </TextInput>
+            <View style={GlobalStyles.Separator}></View>
+            <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>PASSWORD</Label>
+            <TextInput autoCapitalize="none" secureTextEntry={true} onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onPasswordChange(e)} style={[Styles.TextInput, Styles.Password]}>
+              {`${this.state.password}`}
+            </TextInput>
+            <View style={Styles.LoginButtonContainter}>
+              <TouchableHighlight onPress={() => this.login()} onLongPress={() => this.login()} style={GlobalStyles.DopaButton} underlayColor={Colors.DopaGreen} >
+                <Label font={Settings.FONTS.HelveticaNeueBold} style={[GlobalStyles.DopaButtonText]}>Sign In</Label>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={() => this.createAccount()} onLongPress={() => this.createAccount()} style={GlobalStyles.DopaButton} underlayColor={Colors.DopaGreen} >
+                <Label font={Settings.FONTS.HelveticaNeueBold} style={[GlobalStyles.DopaButtonText]}>Create Account</Label>
+              </TouchableHighlight>
             </View>
-            <View style={Styles.MiddleContainer}>
-              <Label style={Styles.MainTitle} font={Settings.FONTS.HelveticaNeueThin}>Login</Label>
-              <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>USERNAME</Label>
-              <TextInput autoCapitalize="none" onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onUsernameChange(e)} style={[Styles.TextInput]}>
-                {`${this.state.username}`}
-              </TextInput>
-              <View style={Styles.CredentialSeparator}></View>
-              <View style={Styles.PasswordPretextArea}>
-                <Label style={Styles.PasswordPretext} font={Settings.FONTS.HelveticaNeueBold}>PASSWORD</Label>
-              </View>
-              <TextInput autoCapitalize="none" secureTextEntry={true} onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onPasswordChange(e)} style={[Styles.TextInput, Styles.Password]}>
-                {`${this.state.password}`}
-              </TextInput>
-              <View style={Styles.LoginButtonContainter}>
-                <TouchableHighlight onPress={() => this.login()} onLongPress={() => this.login()} style={Styles.LoginButton} underlayColor={Colors.DopaGreen} >
-                  <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.LoginButtonText]}>Sign In</Label>
-                </TouchableHighlight>
-                <TouchableHighlight onPress={() => this.createAccount()} onLongPress={() => this.createAccount()} style={Styles.LoginButton} underlayColor={Colors.DopaGreen} >
-                  <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.LoginButtonText]}>Create Account</Label>
-                </TouchableHighlight>
-              </View>
-            </View>
-          </KeyboardAvoidingView>
-          <View style={{width: Settings.WindowWidth, paddingTop: Settings.WindowHeight / 40, alignContent: 'center', justifyContent: 'center'}}>
+          </View>
+          <View style={Styles.FootContainer}>
             <Label style={Styles.FootNote}>Our aim is simplicity and easy-use, few steps towards your mental relief.</Label>
             <Label style={Styles.FootNote}>In DopaChat, you can chat to raise your Dopamine levels, the chemical specific for happiness. This platform allows you to connect with others who share your feelings, traumas or anxieties in a secure and private environment.</Label>
-            <Label style={[Styles.FootNote, {marginTop: Settings.WindowHeight / 40 }]}>Disclaimer, this platform does not replace professional help. If you suffer from any mental illnesses, consult a professional.</Label>
+            <Label style={[Styles.FootNote]}>Disclaimer, this platform does not replace professional help. If you suffer from any mental illnesses, consult a professional.</Label>
           </View>
-        </View>        
-      </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
     );
   }
 }
