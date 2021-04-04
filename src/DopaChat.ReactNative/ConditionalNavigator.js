@@ -31,10 +31,10 @@ class ConditionalNavigator extends Component {
 
   getInitialRouteName() {
     if (new Date(this.props.expiry) < (new Date())) {
-      return Settings.ScreenNames.Results;
+      return Settings.ScreenNames.Home;
     }
     
-    return Settings.ScreenNames.Results;
+    return Settings.ScreenNames.Home;
   }
 
   getStackNavigator() {

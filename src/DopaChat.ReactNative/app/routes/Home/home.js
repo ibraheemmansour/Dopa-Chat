@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Image, KeyboardAvoidingView, ScrollView, FlatList, BackHandler, TouchableHighlight, Alert } from 'react-native';
+import { View, Image, KeyboardAvoidingView, Switch, FlatList, BackHandler, TouchableHighlight, Alert } from 'react-native';
 import { Picker } from "@react-native-community/picker";
 import CheckBox from '@react-native-community/checkbox';
 
@@ -20,6 +20,7 @@ import Label from '../../components/Label';
 import { setLoadingAction } from '../../redux/actions/globalActions';
 
 import Styles from './styles.js';
+import GlobalStyles from '../../config/globalstyles.js';
 
 class Home extends PureComponent {
   constructor (props) {
@@ -38,6 +39,7 @@ class Home extends PureComponent {
         cityId: null,
         country: null
       },
+      showLocation: true,
       countries: [],
       selected_country: null,
       cities: [],
@@ -64,7 +66,6 @@ class Home extends PureComponent {
     this.props.dispatchSetLoadingAction(true);
     let app = this;
     await this.props.dispatchGetUserAction(this.state.user.id, function (user_data, error, response) {
-      console.log(user_data);
       if (user_data) {
         app.setState({ selected_country: user_data.country, user: user_data });
         app.getSelectedCountryCities(user_data.country);
@@ -105,8 +106,8 @@ class Home extends PureComponent {
   async populateKeywords() {
     let app = this;
     await this.props.dispatchGetKeywordsAction(function (keywords_data, error, response) {
-      app.props.dispatchSetLoadingAction(false);
       if (keywords_data == null) {
+        app.props.dispatchSetLoadingAction(false);
         Alert.alert('Connection Error', 'An error has occured, please try again.', [{ text: 'OK' }], { cancelable: true });
       }
       else if (keywords_data.length > 0 && app.state.user.keywords != null) {
@@ -119,6 +120,7 @@ class Home extends PureComponent {
             });
           });
           app.setState({ keywords: keywords });
+          app.props.dispatchSetLoadingAction(false);
         }     
     });    
   }
@@ -135,41 +137,37 @@ class Home extends PureComponent {
   }
 
   async searchPeople() {
-    console.log(1);
-    var people = [{"id":1009,"firstName":"Reem","lastName":"Mansour","nickname":"reem1992","password":"root","email":"reem@cc.com","description":"I'm an alci","languages":"en","keywords":"performance_anxiety","country":"LB","cityId":1422847713},{"id":1011,"firstName":"Fahed","lastName":"Geagea","nickname":"fahed1990","password":"root","email":"fahed@lf.com","description":"Ana fene2e","languages":"en","keywords":"performance_anxiety,insomnia","country":"LB","cityId":1422847713},{"id":1012,"firstName":"Hoda","lastName":"Ghamlouch","nickname":"hoda1966","password":"root","email":"hoda@fouani.com","description":"Help me!","languages":"en","keywords":"performance_anxiety","country":"LB","cityId":1422847713}];
-    this.props.navigation.navigate({routeName: Settings.ScreenNames.Results, params: { people: people } });
+    let app = this;
+    app.props.dispatchSetLoadingAction(true);
 
-    // let app = this;
-    // app.props.dispatchSetLoadingAction(true);
+    var searchQuery = { 
+      id: this.state.user.id,
+      country: this.state.selected_country,
+      city: this.state.selected_city,
+      keywords: this.state.keywords.filter(keyword => { return keyword.value == true })
+    };
 
-    // var searchQuery = { 
-    //   id: this.state.user.id,
-    //   country: this.state.selected_country,
-    //   city: this.state.selected_city,
-    //   keywords: this.state.keywords.filter(keyword => { return keyword.value == true })
-    // };
-
-    // await this.props.dispatchSearchPeopleAction(searchQuery, function (data, error, response) {
-    //   app.props.dispatchSetLoadingAction(false);
-    //   if (data) {
-    //     if (data.length > 0)
-    //     {
-    //       app.props.navigation.navigate(Settings.ScreenNames.Results, data);
-    //       console.log(JSON.stringify(data));
-    //     } else {
-    //       Alert.alert('No Results', 'There are no people matching your search criteria.', [{ text: 'OK' }], { cancelable: true });
-    //     }
-    //   }
-    //   else {
-    //     console.log(error);
-    //   }
-    // });
+    await this.props.dispatchSearchPeopleAction(searchQuery, function (data, error, response) {
+      app.props.dispatchSetLoadingAction(false);
+      if (data) {
+        if (data.length > 0)
+        {
+          app.props.navigation.navigate(Settings.ScreenNames.Results, { people: data });
+          console.log(JSON.stringify(data));
+        } else {
+          Alert.alert('No Results', 'There are no people matching your search criteria.', [{ text: 'OK' }], { cancelable: true });
+        }
+      }
+      else {
+        console.log(error);
+      }
+    });
   }
 
   renderCountries() {
     return (
       <View>
-        <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>COUNTRY</Label>
+        <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>Country</Label>
         <Picker selectedValue={this.state.selected_country} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, width: Settings.WindowWidth / 3, height: 50 }} onValueChange={(itemValue, itemIndex) => console.log("Country: " + itemValue)}>
           {this.state.countries}
         </Picker>
@@ -180,7 +178,7 @@ class Home extends PureComponent {
   renderCities() {
     return (
       <View>
-        <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>CITY</Label>
+        <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>City</Label>
         <Picker selectedValue={this.state.selected_city} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, width: Settings.WindowWidth / 3, height: 50 }} onValueChange={(itemValue, itemIndex) => console.log(itemValue)}>
           {this.state.cities}
         </Picker>
@@ -198,58 +196,40 @@ class Home extends PureComponent {
         </View>
       );
     });
-    return (
-      <View>
-        <View style={Styles.Separator}></View>
-        <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>KEYWORDS</Label>
-        {keywords}
-      </View>
-    );
-  }
-
-  renderPeople() {
-    return (
-      <FlatList data={this.state.people} keyExtractor={(item, index) => "person_" + index} numColumns = {3}
-         renderItem={(person) => (
-           <TouchableHighlight style={[Styles.PersonTouchable]} onPress={() => this.onClickPerson(person.item)} underlayColor="transparent">
-            <View>
-               <View style={[Styles.PersonContainer]}>
-                 <Label style={[Styles.PersonTitle]}>{person.item.firstName} {person.item.lastName}</Label>
-               </View>
-             </View>
-           </TouchableHighlight>
-         )}
-       />
-    )
+    return keywords;
   }
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: Colors.BackgroundColor, paddingTop: Settings.WindowHeight / 120 }}>
-        <KeyboardAvoidingView keyboardVerticalOffset={30} behavior="position">
-          <View style={Styles.UpperView}>
-            <Image style={Styles.GroupedLogo} source={Images.Logo} />
-            <Label style={Styles.Version} font={Settings.FONTS.HelveticaNeueThin}>{getVersion()}</Label>
-          </View>
-          <View style={Styles.MiddleContainer}>
-            <Label style={Styles.Title} font={Settings.FONTS.HelveticaNeueMedium}>Matching</Label>
-            <View>
-              <View style={Styles.CredentialSeparator}></View>
-              <View>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                  {this.renderCountries()}
-                  {this.renderCities()}
-                </View>
-              </View>
+      <View style={GlobalStyles.Container}>
+        <View style={GlobalStyles.UpperView}>
+          <Image style={GlobalStyles.GroupedLogo} source={Images.Logo} />
+          <Label style={GlobalStyles.Version} font={Settings.FONTS.HelveticaNeueThin}>v{getVersion()}</Label>
+        </View>
+        <View style={Styles.MiddleContainer}>
+            <Label style={GlobalStyles.PageTitle} font={Settings.FONTS.HelveticaNeueMedium}>Matching</Label>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Label style={[GlobalStyles.TextFieldPretext, { marginBottom: 10 }]} font={Settings.FONTS.HelveticaNeueBold}>Show Location</Label>
+              <Switch trackColor={{ false: Colors.Gray3, true: Colors.DopaGreen }} thumbColor={this.state.showLocation ? Colors.DopaGreenLight : Colors.White}
+              ios_backgroundColor="#3e3e3e" onValueChange={val => this.setState({ showLocation: val })} value={this.state.showLocation} />
             </View>
-            {this.renderSelectedKeywords()}              
-          </View>
-          <View style={{ alignItems: 'center', marginTop: Settings.WindowHeight / 50, marginBottom: Settings.WindowHeight / 50 }}>
-            <TouchableHighlight onPress={() => this.searchPeople()} onLongPress={() => this.searchPeople()} style={Styles.LoginButton} underlayColor={Colors.DopaGreen} >
-              <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.LoginButtonText]}>Search</Label>
-            </TouchableHighlight>
-          </View>
-        </KeyboardAvoidingView>
+            { this.state.showLocation && 
+              (<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                {this.renderCountries()}
+                {this.renderCities()}
+              </View> )
+            }
+            <View>
+              <View style={GlobalStyles.Separator}></View>
+              <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>Keywords</Label>
+              {this.renderSelectedKeywords()}       
+            </View>
+          </View>          
+        <View style={{ flex: 1, marginBottom: Settings.WindowHeight / 15, alignItems: 'center', justifyContent: 'flex-end' }}>
+          <TouchableHighlight onPress={() => this.searchPeople()} onLongPress={() => this.searchPeople()} style={Styles.LoginButton} underlayColor={Colors.DopaGreen} >
+            <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.LoginButtonText]}>Search</Label>
+          </TouchableHighlight>
+        </View>
       </View>
     );
   }

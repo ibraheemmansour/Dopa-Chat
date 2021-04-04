@@ -59,6 +59,15 @@ namespace DopaChat.WebAPI.Controllers
                         user.Country = city.ISO2;
                     }
 
+                    List<string> keywords = new List<string>();
+                    user.Keywords.Split(',').ToList().ForEach(id => {
+                        var keyword = db.Keywords.FirstOrDefault(k => k.Id == id);
+                        if (keyword != null)
+                        {
+                            keywords.Add(keyword.Title);
+                        }
+                    });
+                    user.Keywords = string.Join(",", keywords);
                     users.Add(user);
                 }
             });
