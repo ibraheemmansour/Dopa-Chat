@@ -3,7 +3,6 @@ import axios from "axios"
 import { loginSuccessAction } from '../redux/actions/loginActions';
 
 import Settings from './settings';
-import { store } from '../redux/store/store';
 
 export function login(username, password, callback) {
     return dispatch => {
@@ -12,7 +11,7 @@ export function login(username, password, callback) {
             password: password
         })
         .then(function (response) {
-            dispatch(loginSuccessAction(response.data.access_token));
+            dispatch(loginSuccessAction(response.data));
             callback(response.data, null, response);
         })
         .catch(function (error) {
@@ -52,7 +51,6 @@ export function getUsers(callback) {
 
 export function getUser(id, callback) {
     return dispatch => {
-        console.log(Settings.WEB_API_URI + 'user/' + id);
         axios.get(Settings.WEB_API_URI + 'user/' + id).then(function (response) {
             callback(response.data, null, response);
         }).catch(function (error) {
@@ -89,6 +87,7 @@ export function searchPeople(query, callback) {
         return axios.post(Settings.WEB_API_URI + 'user/search', {
             id: query.id,
             country: query.country,
+            showLocation: query.showLocation,
             keywords: query.keywords,
             city: query.city
         })

@@ -162,10 +162,8 @@ class CreateAccount extends PureComponent {
 
   async getSelectedCountryCities(country) {
     this.setState({ selected_country: country });
-    //this.props.dispatchSetLoadingAction(true);
     let app = this;
     this.props.dispatchGetCitiesAction(country, function (cities_data, error, response) {
-      //app.props.dispatchSetLoadingAction(false);
       if (cities_data) {
         let cities = [];
         cities_data.forEach(city =>

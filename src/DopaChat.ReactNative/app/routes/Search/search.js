@@ -13,6 +13,7 @@ import Settings from '../../config/settings.js';
 import Colors from '../../config/colors.js';
 import Images from '../../config/images.js';
 import { searchPeople, getUser, getCities, getKeywords } from '../../config/client.js';
+import { store } from '../../redux/store/store';
 
 import Countries from '../../data/countries.json';
 
@@ -28,18 +29,7 @@ class Search extends PureComponent {
     super(props);
 
     this.state = {
-      user: {
-        id: 5,
-        firstName: null,
-        lastName: null,
-        nickname: null,
-        email: null,
-        description: null,
-        languages: null,
-        keywords: null,
-        cityId: null,
-        country: null
-      },
+      user: store.getState().loginReducer.user,
       showResults: false,
       showLocation: true,
       countries: [],
@@ -60,7 +50,12 @@ class Search extends PureComponent {
   }
 
   handleBackPress = () => {
-    BackHandler.exitApp();
+    if (this.state.showResults) {
+      this.setState( { showResults: false } );
+    }
+    else {
+      BackHandler.exitApp();
+    }
     return true;
   }
 
@@ -73,6 +68,7 @@ class Search extends PureComponent {
         app.getSelectedCountryCities(user_data.country);
       }
       else {
+        app.props.dispatchSetLoadingAction(false);
         Alert.alert('Connection Error', 'An error has occured, please try again.', [{ text: 'OK' }], { cancelable: true });
       }
     });  
@@ -96,10 +92,11 @@ class Search extends PureComponent {
         {
           cities.push(<Picker.Item key={city.Id} label={city.CityName} value={city.Id}/>);
         });
-        app.setState({ cities: cities, selected_country: country, selected_city: app.state.user.cityId });
+        app.setState({ cities: cities, selected_country: country, selected_city: cities_data[0].Id });
         app.populateKeywords();
       }
       else {
+        app.props.dispatchSetLoadingAction(false);
         Alert.alert('Connection Error', 'An error has occured, please try again.', [{ text: 'OK' }], { cancelable: true });
       }
     });    
@@ -138,16 +135,32 @@ class Search extends PureComponent {
     this.setState({ keywords: keywords });
   }
 
+  chat() {
+
+  }
+
+  async onCountryChange(country) {
+    this.setState({ selected_country: country });
+    await this.getSelectedCountryCities(country);
+  }
+
+  onCityChange(city) {
+    this.setState({ selected_city: city });
+  }
+
   async searchPeople() {
     let app = this;
     app.props.dispatchSetLoadingAction(true);
 
     var searchQuery = { 
       id: this.state.user.id,
+      showLocation: this.state.showLocation,
       country: this.state.selected_country,
       city: this.state.selected_city,
       keywords: this.state.keywords.filter(keyword => { return keyword.value == true })
     };
+
+    console.log(searchQuery);
 
     await this.props.dispatchSearchPeopleAction(searchQuery, function (data, error, response) {
       app.props.dispatchSetLoadingAction(false);
@@ -160,6 +173,7 @@ class Search extends PureComponent {
         }
       }
       else {
+        app.props.dispatchSetLoadingAction(false);
         console.log(error);
       }
     });
@@ -170,7 +184,7 @@ class Search extends PureComponent {
     return (
     <FlatList data={keywords} keyExtractor={(item, index) => "keyword_" + index} numColumns = {2}
       renderItem={(keyword, index) => (
-        <Label font={Settings.FONTS.HelveticaNeueBold}>{keyword.item}</Label>
+        <Label style={{ paddingRight: 20 }} font={Settings.FONTS.HelveticaNeueBold}>{keyword.item}</Label>
       )}
     />
     )
@@ -194,17 +208,22 @@ class Search extends PureComponent {
 
   renderResults() {
     return (
-      <View>
-        <View>
+      <View style={{flex: 1}}>
+        <View style={{flex: 1}}>
           <Label style={GlobalStyles.PageTitle} font={Settings.FONTS.HelveticaNeueMedium}>Results</Label>
           <Carousel ref={(c) => { this._carousel = c; }} data={this.state.people} renderItem={this.renderPerson} 
            sliderWidth={Settings.WindowWidth} itemWidth={Settings.WindowWidth / 1.3} />
         </View>
-        <View style={{ flex: 1, marginBottom: Settings.WindowHeight / 15, alignItems: 'center', justifyContent: 'flex-end' }}>
-          <TouchableHighlight onPress={() => this.chat()} onLongPress={() => this.createAccount()} style={Styles.ChatButton} underlayColor={Colors.DopaGreen} >
+        <View style={[Styles.LowerContainter, { flexDirection: 'row', justifyContent: 'space-around' }]}>
+          <TouchableHighlight onPress={() => this.chat()} onLongPress={() => this.createAccount()} style={Styles.DopaChatButton} underlayColor={Colors.DopaGreen} >
             <View style={{flexDirection: 'row'}}>
-              <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.ChatButtonText, {fontWeight: 'bold'}]}>Dopa </Label>
-              <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.ChatButtonText]}>Chat</Label>
+              <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.DopaChatButtonText, {fontWeight: 'bold'}]}>Dopa </Label>
+              <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.DopaChatButtonText]}>Chat</Label>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={() => this.setState({ showResults: false })} onLongPress={() => this.setState({ showResults: false })} style={Styles.DopaChatButton} underlayColor={Colors.DopaGreen} >
+            <View style={{flexDirection: 'row'}}>
+              <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.DopaChatButtonText]}>Back</Label>
             </View>
           </TouchableHighlight>
         </View>
@@ -216,7 +235,7 @@ class Search extends PureComponent {
     return (
       <View>
         <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>Country</Label>
-        <Picker selectedValue={this.state.selected_country} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, width: Settings.WindowWidth / 3, height: 50 }} onValueChange={(itemValue, itemIndex) => console.log("Country: " + itemValue)}>
+        <Picker selectedValue={this.state.selected_country} style={Styles.Picker} onValueChange={(itemValue, itemIndex) => this.onCountryChange(itemValue)}>
           {this.state.countries}
         </Picker>
       </View>
@@ -227,7 +246,7 @@ class Search extends PureComponent {
     return (
       <View>
         <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>City</Label>
-        <Picker selectedValue={this.state.selected_city} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, width: Settings.WindowWidth / 3, height: 50 }} onValueChange={(itemValue, itemIndex) => console.log(itemValue)}>
+        <Picker selectedValue={this.state.selected_city} style={Styles.Picker} onValueChange={(itemValue, itemIndex) => this.onCityChange(itemValue)}>
           {this.state.cities}
         </Picker>
       </View>
@@ -235,45 +254,47 @@ class Search extends PureComponent {
   }
 
   renderSelectedKeywords() {
-    let keywords = [];
-    this.state.keywords.forEach(keyword => {
-      keywords.push(
-        <View style={{flexDirection: 'row'}}>
-          <CheckBox key={keyword.id} value={keyword.value} onValueChange={(itemValue, itemIndex) => this.checkboxChange(keyword.id)} style={Styles.Checkbox}/>
-          <Label font={Settings.FONTS.HelveticaNeueBold}>{keyword.title}</Label>
-        </View>
-      );
-    });
-    return keywords;
+    return (
+      <FlatList data={this.state.keywords} keyExtractor={(item, index) => "keyword_" + index} numColumns = {3}
+        renderItem={(keyword, index) => (
+          <View key={keyword.id} style={{flexDirection: 'row', alignItems: 'center'}}>
+            <CheckBox key={keyword.item.id} value={keyword.item.value} onValueChange={(itemValue, itemIndex) => this.checkboxChange(keyword.item.id)} style={Styles.Checkbox}/>
+            <Label font={Settings.FONTS.HelveticaNeueBold}>{keyword.item.title}</Label>
+          </View>
+        )}
+      />
+    );
   }
 
   renderSearch() {
     return (
-      <View>
-        <View style={Styles.MiddleContainer}>
-        <Label style={GlobalStyles.PageTitle} font={Settings.FONTS.HelveticaNeueMedium}>Matching</Label>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Label style={[GlobalStyles.TextFieldPretext, { marginBottom: 10 }]} font={Settings.FONTS.HelveticaNeueBold}>Show Location</Label>
-          <Switch trackColor={{ false: Colors.Gray3, true: Colors.DopaGreen }} thumbColor={this.state.showLocation ? Colors.DopaGreenLight : Colors.White}
-          ios_backgroundColor="#3e3e3e" onValueChange={val => this.setState({ showLocation: val })} value={this.state.showLocation} />
+      <View style={{flex: 1}}>
+        <View style={{flex: 1}}>
+          <View style={Styles.MiddleContainer}>
+          <Label style={GlobalStyles.PageTitle} font={Settings.FONTS.HelveticaNeueMedium}>Matching</Label>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Label style={[GlobalStyles.TextFieldPretext, { marginBottom: 10 }]} font={Settings.FONTS.HelveticaNeueBold}>Show Location</Label>
+            <Switch trackColor={{ false: Colors.Gray3, true: Colors.DopaGreen }} thumbColor={this.state.showLocation ? Colors.DopaGreenLight : Colors.White}
+            ios_backgroundColor="#3e3e3e" onValueChange={val => this.setState({ showLocation: val })} value={this.state.showLocation} />
+          </View>
+          { this.state.showLocation && 
+            (<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              {this.renderCountries()}
+              {this.renderCities()}
+            </View> )
+          }
+          <View>
+            <View style={GlobalStyles.Separator}></View>
+            <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>Keywords</Label>
+            {this.renderSelectedKeywords()}       
+          </View>
+        </View>          
         </View>
-        { this.state.showLocation && 
-          (<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            {this.renderCountries()}
-            {this.renderCities()}
-          </View> )
-        }
-        <View>
-          <View style={GlobalStyles.Separator}></View>
-          <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>Keywords</Label>
-          {this.renderSelectedKeywords()}       
+        <View style={Styles.LowerContainter}>
+          <TouchableHighlight onPress={() => this.searchPeople()} onLongPress={() => this.searchPeople()} style={Styles.DopaChatButton} underlayColor={Colors.DopaGreen} >
+            <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.DopaChatButtonText]}>Search</Label>
+          </TouchableHighlight>
         </View>
-      </View>          
-      <View style={{ flex: 1, marginBottom: Settings.WindowHeight / 15, alignItems: 'center', justifyContent: 'flex-end' }}>
-        <TouchableHighlight onPress={() => this.searchPeople()} onLongPress={() => this.searchPeople()} style={Styles.LoginButton} underlayColor={Colors.DopaGreen} >
-          <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.LoginButtonText]}>Search</Label>
-        </TouchableHighlight>
-      </View>
     </View>
     )
   }

@@ -46,7 +46,6 @@ namespace DopaChat.WebAPI.Controllers
         {
             List<User> users = new List<User>();
 
-            users.AddRange(db.Users.Where(x => x.CityId == body.City && x.Id != body.Id).ToList());
             db.Users.ToList().ForEach(user =>
             {
                 var found = user.Keywords.Split(',').FirstOrDefault(x => body.Keywords.Select(k => k.Id).Contains(x));
@@ -71,6 +70,11 @@ namespace DopaChat.WebAPI.Controllers
                     users.Add(user);
                 }
             });
+
+            if (body.showLocation)
+            {
+                users.AddRange(db.Users.Where(x => x.CityId == body.City && x.Id != body.Id).ToList());
+            }
 
             return Mapper.Map<List<User>, List<UserDto>>(users.ToList());
         }

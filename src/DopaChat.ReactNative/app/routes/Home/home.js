@@ -48,8 +48,8 @@ class Home extends PureComponent {
           <Label style={GlobalStyles.Version} font={Settings.FONTS.HelveticaNeueThin}>v{getVersion()}</Label>
         </View>
         <View style={Styles.MiddleContainer}>
-            <Label style={GlobalStyles.PageTitle} font={Settings.FONTS.HelveticaNeueMedium}>Home</Label>
-          </View>          
+          <Label style={GlobalStyles.PageTitle} font={Settings.FONTS.HelveticaNeueMedium}>Home</Label>
+        </View>          
       </View>
     );
   }

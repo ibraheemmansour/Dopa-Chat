@@ -1,11 +1,12 @@
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOG_OUT = 'LOG_OUT';
 
-export const loginSuccessAction = (access_token) => ({
+export const loginSuccessAction = (user) => ({
   type: LOGIN_SUCCESS,
   payload: {
     success: true,
-    access_token: access_token
+    user: user,
+    access_token: user.access_token
   }
 });
 

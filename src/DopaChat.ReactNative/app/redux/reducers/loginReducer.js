@@ -6,16 +6,17 @@ import Utils from '../../config/utils';
 
 const initialState = {
   access_token: null,
-  expiry: null
+  expiry: null,
+  user: null
 };
 
 const LoginReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_SUCCESS: {
-      return { ...state, access_token: action.payload.access_token, expiry: Utils.GetExpireDate() }
+      return { ...state, user: action.payload.user, access_token: action.payload.user.access_token, expiry: Utils.GetExpireDate() }
     }
     case LOG_OUT: {
-      return { ...state, access_token: null, expiry: null }
+      return { ...state, user: null, access_token: null, expiry: null }
     }
     default: { return state }
   }

@@ -29,6 +29,7 @@ namespace DopaChat.WebAPI.Controllers
 
             return Ok(JObject.FromObject(new
             {
+                id = user.Id,
                 nickname = user.Nickname,
                 firstName = user.FirstName,
                 lastName = user.LastName,

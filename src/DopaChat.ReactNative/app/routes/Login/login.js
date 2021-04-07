@@ -47,11 +47,7 @@ class Login extends PureComponent {
     let app = this;
     this.props.dispatchLoginAction(this.state.username, this.state.password, function (data, error, response) {
       app.props.dispatchSetLoadingAction(false);
-      console.log(data);
-      console.log(data && data.access_token);
       if (data && data.access_token) {
-        console.log(data);
-        console.log(data && data.access_token);
         app.props.navigation.navigate(Settings.ScreenNames.Home);
       }
       else {

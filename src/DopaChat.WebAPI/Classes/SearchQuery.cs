@@ -9,6 +9,9 @@ namespace DopaChat.WebAPI.Classes
         [JsonProperty("id")]
         public int Id { get; set; }
 
+        [JsonProperty("showLocation")]
+        public bool showLocation { get; set; }
+
         [JsonProperty("country")]
         public string Country { get; set; }
 

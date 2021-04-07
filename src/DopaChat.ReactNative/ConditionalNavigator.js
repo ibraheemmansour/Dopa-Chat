@@ -150,11 +150,12 @@ class ConditionalNavigator extends Component {
     }, {
       tabBarOptions: {
         activeTintColor: Colors.DopaGreen,
+        showLabel: false,
         tabStyle: { padding: 0, marginBottom: 16, marginTop: 16 },
         labelStyle: { fontSize: Settings.IsTablet ? 12 : 11, fontFamily: Settings.FONTS.HelveticaNeueBold },
         allowFontScaling: true,
         style: {
-          backgroundColor: Colors.Gray2, height: 83,
+          backgroundColor: Colors.Gray2, height: Settings.WindowHeight / 12,
           borderTopWidth: 0,
           ...Platform.select({
             ios: { shadowColor: Colors.Gray0, shadowOffset: { width: 0, height: 1 }, shadowRadius: 10 }
