@@ -105,6 +105,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assistant.cs">
+      <DependentUpon>DopaChatModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="City.cs">
       <DependentUpon>DopaChatModel.tt</DependentUpon>
     </Compile>
@@ -130,6 +133,7 @@
       <DependentUpon>DopaChatModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Mappings\CityMapper.cs" />
+    <Compile Include="Mappings\AssistantMapper.cs" />
     <Compile Include="Mappings\LanguageMapper.cs" />
     <Compile Include="Mappings\KeywordMapper.cs" />
     <Compile Include="Mappings\UserMapper.cs" />

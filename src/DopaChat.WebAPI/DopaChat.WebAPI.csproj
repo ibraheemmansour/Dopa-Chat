@@ -256,6 +256,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="AutoMapperProfiles\AssistantProfile.cs" />
     <Compile Include="AutoMapperProfiles\KeywordProfile.cs" />
     <Compile Include="AutoMapperProfiles\LanguageProfile.cs" />
     <Compile Include="AutoMapperProfiles\CityProfile.cs" />
@@ -264,6 +265,7 @@
     <Compile Include="Classes\ErrorResponseHelper.cs" />
     <Compile Include="Classes\Extensions.cs" />
     <Compile Include="Classes\LoginBody.cs" />
+    <Compile Include="Controllers\AssistantController.cs" />
     <Compile Include="Controllers\KeywordController.cs" />
     <Compile Include="Controllers\CityController.cs" />
     <Compile Include="Controllers\AuthController.cs" />

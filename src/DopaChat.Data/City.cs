@@ -22,6 +22,8 @@ public partial class City
     public City()
     {
 
+        this.Assistants = new HashSet<Assistant>();
+
         this.Users = new HashSet<User>();
 
     }
@@ -50,6 +52,10 @@ public partial class City
     public int Id { get; set; }
 
 
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+
+    public virtual ICollection<Assistant> Assistants { get; set; }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
 

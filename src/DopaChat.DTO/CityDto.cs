@@ -20,5 +20,8 @@ namespace DopaChat.Models
 
         [JsonIgnore]
         public IList<UserDto> Users { get; set; }
+
+        [JsonIgnore]
+        public IList<AssistantDto> Assistants { get; set; }
     }
 }

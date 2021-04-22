@@ -124,7 +124,7 @@ class CreateAccount extends PureComponent {
     await this.props.dispatchCreateAccountAction(user, function (data, error, response) {
       app.props.dispatchSetLoadingAction(false);
       if (data) {
-        app.props.navigation.navigate(Settings.ScreenNames.Home);
+        app.props.navigation.navigate(Settings.ScreenNames.Account);
       }
       else {
         if (error.includes("400")) {

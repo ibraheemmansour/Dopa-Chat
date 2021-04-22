@@ -32,6 +32,8 @@ public partial class DopaChatEntities : DbContext
     }
 
 
+    public virtual DbSet<Assistant> Assistants { get; set; }
+
     public virtual DbSet<City> Cities { get; set; }
 
     public virtual DbSet<Keyword> Keywords { get; set; }

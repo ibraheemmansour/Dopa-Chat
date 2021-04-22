@@ -12,8 +12,8 @@ var Settings = {
 		SWIPE_LEFT: 'SWIPE_LEFT',
 		SWIPE_RIGHT: 'SWIPE_RIGHT'
 	},
-	WEB_API_URI: "http://192.168.0.108/DopaChat.WebAPI/api/",
-	ScreenNames: { Splash: "SplashScreen", Login: "LoginScreen", CreateAccount: "CreateAccountScreen", Home: "HomeScreen", Search: "SearchScreen", Chats: "ChatsScreen", Account: "AccountScreen" },
+	WEB_API_URI: "http://192.168.0.107/DopaChat.WebAPI/api/",
+	ScreenNames: { Splash: "SplashScreen", Login: "LoginScreen", CreateAccount: "CreateAccountScreen", Account: "AccountScreen", Search: "SearchScreen", Chats: "ChatsScreen", SeekProfessionalHelp: "SeekProfessionalHelpScreen" },
 	FONTS: {
 		arial: "arial",
 		HelveticaNeueBold: Platform.OS === "android" ? "HelveticaNeueBold" : "HelveticaNeue-Bold",

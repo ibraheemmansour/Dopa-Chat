@@ -99,3 +99,15 @@ export function searchPeople(query, callback) {
         });
     }
 }
+
+export function getAssistants(id, callback) {
+    console.log(Settings.WEB_API_URI + 'assistants/city/' + id);
+    return dispatch => {
+        axios.get(Settings.WEB_API_URI + 'assistants/city/' + id)
+        .then(function (response) {
+            callback(response.data, null, response);
+        }).catch(function (error) {
+            callback(null, error, null);
+        });
+    }
+}

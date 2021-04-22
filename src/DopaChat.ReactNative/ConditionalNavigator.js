@@ -12,12 +12,12 @@ import Settings from './app/config/settings.js';
 
 import SplashScreen from './app/routes/Splash';
 import LoginScreen from './app/routes/Login';
-import HomeScreen from './app/routes/Home';
 import SearchScreen from './app/routes/Search';
 import ChatsScreen from './app/routes/Chats';
 import AccountScreen from './app/routes/Account';
 import LogoutScreen from './app/routes/Logout';
 import CreateAccountScreen from './app/routes/CreateAccount';
+import SeekProfessionalHelpScreen from './app/routes/SeekProfessionalHelp';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -34,7 +34,7 @@ class ConditionalNavigator extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.Home);
+    this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.Account);
     this.AppNavigator = createAppContainer(this.getStackNavigator());
   }
 
@@ -43,12 +43,12 @@ class ConditionalNavigator extends Component {
       return Settings.ScreenNames.Login;
     }
     
-    return Settings.ScreenNames.Home;
+    return Settings.ScreenNames.Account;
   }
 
   getStackNavigator() {
     const StackNavigator = createStackNavigator({
-      HomeScreen: {
+      AccountScreen: {
         screen: this.getTabNavigator(),
         navigationOptions: {
           headerShown: false
@@ -88,13 +88,13 @@ class ConditionalNavigator extends Component {
 
   getTabNavigator() {
     const TabNavigator = createBottomTabNavigator({
-      HomeScreen: {
-        screen: HomeScreen,
+      AccountScreen: {
+        screen: AccountScreen,
         navigationOptions: {
-          title: "Home",
-          tabBarIcon: (options) => !options.focused ? (<Image source={Images.Tab_Home} style={GlobalStyles.TabIcon} />) : (<Image source={Images.Tab_Home_Selected} style={GlobalStyles.TabIcon} />),
+          title: "Account",
+          tabBarIcon: (options) => !options.focused ? (<Image source={Images.Tab_Account} style={GlobalStyles.TabIcon} />) : (<Image source={Images.Tab_Account_Selected} style={GlobalStyles.TabIcon} />),
           tabBarOnPress: (scene, jumpToIndex) => {
-            this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.Home);
+            this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.Account);
             scene.defaultHandler();
           }
         }
@@ -121,13 +121,13 @@ class ConditionalNavigator extends Component {
           }
         }
       },
-      AccountScreen: {
-        screen: AccountScreen,
+      SeekProfessionalHelp: {
+        screen: SeekProfessionalHelpScreen,
         navigationOptions: {
-          title: "Account",
-          tabBarIcon: (options) => !options.focused ? (<Image source={Images.Tab_Account} style={GlobalStyles.TabIcon} />) : (<Image source={Images.Tab_Account_Selected} style={GlobalStyles.TabIcon} />),
+          title: "Seek Professional Help",
+          tabBarIcon: (options) => !options.focused ? (<Image source={Images.Tab_SeekProfessionalHelp} style={GlobalStyles.TabIcon} />) : (<Image source={Images.Tab_SeekProfessionalHelp_Selected} style={GlobalStyles.TabIcon} />),
           tabBarOnPress: (scene, jumpToIndex) => {
-            this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.Account);
+            this.props.dispatchSetTabScreenNameAction(Settings.ScreenNames.SeekProfessionalHelp);
             scene.defaultHandler();
           }
         }
@@ -162,7 +162,7 @@ class ConditionalNavigator extends Component {
           })
         }
       },
-      initialRouteName: Settings.ScreenNames.Home,
+      initialRouteName: Settings.ScreenNames.Account,
       tabBarPosition: "bottom",
       backBehavior: "none"
     });
