@@ -3,7 +3,7 @@ import Colors from '../../config/colors.js';
 import Settings from '../../config/settings.js';
 
 const styles = StyleSheet.create({
-    MiddleContainer: { marginLeft: Settings.IsTablet ? Settings.WindowWidth / 6 : Settings.WindowWidth / 17, marginRight: Settings.IsTablet ? Settings.WindowWidth / 6 : Settings.WindowWidth / 17 },
+    MiddleContainer: { flex: 1, marginLeft: Settings.IsTablet ? Settings.WindowWidth / 6 : Settings.WindowWidth / 17, marginRight: Settings.IsTablet ? Settings.WindowWidth / 6 : Settings.WindowWidth / 17 },
     Separator: { marginBottom: Settings.WindowHeight / 40 },
     LoginButtonContainter: { flexDirection: 'row', justifyContent: 'space-around', marginTop: Settings.WindowHeight / 20 },
     LoginButton: { justifyContent: 'center', alignItems: 'center', width: Settings.WindowWidth / 3.8, height: Settings.IsTablet ? 54 : 48, backgroundColor: Colors.DopaGreen, borderRadius: 5 },

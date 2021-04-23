@@ -10,6 +10,12 @@ namespace DopaChat.Models
 
         public string Address { get; set; }
 
+        public string ProfilePicture { get; set; }
+
+        public string Website { get; set; }
+
+        public string Telephone { get; set; }
+
         public int CityId { get; set; }
 
         [JsonIgnore]

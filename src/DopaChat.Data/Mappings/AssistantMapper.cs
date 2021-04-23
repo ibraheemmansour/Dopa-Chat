@@ -12,6 +12,9 @@ namespace DopaChat.Models
             Property(a => a.Id).HasColumnAnnotation("Id", new IndexAnnotation(new[] { new IndexAttribute("Id") { IsUnique = true } }));
             Property(c => c.Name).IsRequired();
             Property(c => c.Address).IsRequired();
+            Property(c => c.ProfilePicture).IsOptional();
+            Property(c => c.Website).IsOptional();
+            Property(c => c.Telephone).IsOptional();
             Property(c => c.CityId).IsRequired();
         }
     }

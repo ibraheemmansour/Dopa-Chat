@@ -34,9 +34,9 @@ public partial class User
 
     public string Languages { get; set; }
 
-    public string Country { get; set; }
-
     public string Keywords { get; set; }
+
+    public string Country { get; set; }
 
     public Nullable<int> CityId { get; set; }
 

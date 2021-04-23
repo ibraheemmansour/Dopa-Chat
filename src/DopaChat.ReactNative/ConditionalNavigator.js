@@ -21,6 +21,7 @@ import SeekProfessionalHelpScreen from './app/routes/SeekProfessionalHelp';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { store } from './app/redux/store/store';
 import Images from './app/config/images';
 import GlobalStyles from './app/config/globalstyles';
 import Colors from './app/config/colors';
@@ -43,6 +44,7 @@ class ConditionalNavigator extends Component {
       return Settings.ScreenNames.Login;
     }
     
+    Settings.User = store.getState().loginReducer.user;
     return Settings.ScreenNames.Account;
   }
 

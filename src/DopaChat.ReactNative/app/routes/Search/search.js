@@ -13,7 +13,6 @@ import Settings from '../../config/settings.js';
 import Colors from '../../config/colors.js';
 import Images from '../../config/images.js';
 import { searchPeople, getUser, getCities, getKeywords } from '../../config/client.js';
-import { store } from '../../redux/store/store';
 
 import Countries from '../../data/countries.json';
 
@@ -29,7 +28,6 @@ class Search extends PureComponent {
     super(props);
 
     this.state = {
-      user: store.getState().loginReducer.user,
       showResults: false,
       showLocation: true,
       countries: [],
@@ -62,7 +60,7 @@ class Search extends PureComponent {
   async getUser() {
     this.props.dispatchSetLoadingAction(true);
     let app = this;
-    await this.props.dispatchGetUserAction(this.state.user.id, function (user_data, error, response) {
+    await this.props.dispatchGetUserAction(Settings.User.id, function (user_data, error, response) {
       if (user_data) {
         app.setState({ selected_country: user_data.country, user: user_data });
         app.getSelectedCountryCities(user_data.country);
@@ -109,10 +107,10 @@ class Search extends PureComponent {
         app.props.dispatchSetLoadingAction(false);
         Alert.alert('Connection Error', 'An error has occured, please try again.', [{ text: 'OK' }], { cancelable: true });
       }
-      else if (keywords_data.length > 0 && app.state.user.keywords != null) {
+      else if (keywords_data.length > 0 && Settings.User.keywords != null) {
         let keywords = [];
         keywords_data.forEach(keyword => {
-          app.state.user.keywords.split(',').forEach(element => {
+          Settings.User.keywords.split(',').forEach(element => {
             if (keyword.id == element) {
                 keywords.push({ key: keyword.id, id: keyword.id, title: keyword.title, value: true });
               }
@@ -153,7 +151,7 @@ class Search extends PureComponent {
     app.props.dispatchSetLoadingAction(true);
 
     var searchQuery = { 
-      id: this.state.user.id,
+      id: Settings.User.id,
       showLocation: this.state.showLocation,
       country: this.state.selected_country,
       city: this.state.selected_city,
