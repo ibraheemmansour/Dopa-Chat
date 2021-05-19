@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
-import { View, Image, Switch, FlatList, BackHandler, TouchableHighlight, Alert } from 'react-native';
+import { View, Image, Switch, FlatList, SafeAreaView, RefreshControl, ScrollView, BackHandler, ActivityIndicator, TouchableHighlight, Alert } from 'react-native';
 import { Picker } from "@react-native-community/picker";
-import CheckBox from '@react-native-community/checkbox';
 
 import { bindActionCreators } from 'redux';
 import Carousel from 'react-native-snap-carousel';
@@ -16,6 +15,7 @@ import { searchPeople, getUser, getCities, getKeywords } from '../../config/clie
 
 import Countries from '../../data/countries.json';
 
+import { store } from '../../redux/store/store';
 import Label from '../../components/Label';
 
 import { setLoadingAction } from '../../redux/actions/globalActions';
@@ -28,13 +28,15 @@ class Search extends PureComponent {
     super(props);
 
     this.state = {
+      user: store.getState().loginReducer.user,
       showResults: false,
       showLocation: true,
+      isReady: false,
+      isRefreshing: false,
       countries: [],
-      selected_country: null,
+      selected_country: store.getState().loginReducer.user.country,
       cities: [],
-      selected_city: null,
-      keywords: [],
+      selected_city: store.getState().loginReducer.user.city,
       people: []
     }
   }
@@ -43,8 +45,9 @@ class Search extends PureComponent {
     this.props.dispatchSetLoadingAction(false);
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
 
+    this.getSelectedCountryCities(this.state.selected_country, this.state.selected_city);
+    this.populateKeywords();
     this.populateCountries();
-    await this.getUser();
   }
 
   handleBackPress = () => {
@@ -57,19 +60,14 @@ class Search extends PureComponent {
     return true;
   }
 
-  async getUser() {
-    this.props.dispatchSetLoadingAction(true);
-    let app = this;
-    await this.props.dispatchGetUserAction(Settings.User.id, function (user_data, error, response) {
-      if (user_data) {
-        app.setState({ selected_country: user_data.country, user: user_data });
-        app.getSelectedCountryCities(user_data.country);
-      }
-      else {
-        app.props.dispatchSetLoadingAction(false);
-        Alert.alert('Connection Error', 'An error has occured, please try again.', [{ text: 'OK' }], { cancelable: true });
-      }
-    });  
+  populateKeywords(data) {
+    let user = {...this.state.user};
+    let keywords = {};
+    Object.entries(data == undefined ? user.keywords : data).forEach(keyword => {
+      keywords[keyword[0]] = { title: keyword[1], isSelected: true};
+    });
+    user.keywords = keywords;
+    this.setState({ user: user });
   }
 
   populateCountries() {
@@ -78,10 +76,10 @@ class Search extends PureComponent {
     {
       countries.push(<Picker.Item key={country.code} label={country.name} value={country.code}/>);
     });
-    this.setState({ countries: countries });
+    this.setState({ countries: countries, isReady: true });
   }
 
-  async getSelectedCountryCities(country) {
+  async getSelectedCountryCities(country, city) {
     let app = this;
     await this.props.dispatchGetCitiesAction(country, function (cities_data, error, response) {
       if (cities_data) {
@@ -90,8 +88,7 @@ class Search extends PureComponent {
         {
           cities.push(<Picker.Item key={city.Id} label={city.CityName} value={city.Id}/>);
         });
-        app.setState({ cities: cities, selected_country: country, selected_city: cities_data[0].Id });
-        app.populateKeywords();
+        app.setState({ cities: cities, selected_country: country, selected_city: city == undefined ? cities_data[0].Id : city });
       }
       else {
         app.props.dispatchSetLoadingAction(false);
@@ -100,34 +97,12 @@ class Search extends PureComponent {
     });    
   }
 
-  async populateKeywords() {
-    let app = this;
-    await this.props.dispatchGetKeywordsAction(function (keywords_data, error, response) {
-      if (keywords_data == null) {
-        app.props.dispatchSetLoadingAction(false);
-        Alert.alert('Connection Error', 'An error has occured, please try again.', [{ text: 'OK' }], { cancelable: true });
-      }
-      else if (keywords_data.length > 0 && Settings.User.keywords != null) {
-        let keywords = [];
-        keywords_data.forEach(keyword => {
-          Settings.User.keywords.split(',').forEach(element => {
-            if (keyword.id == element) {
-                keywords.push({ key: keyword.id, id: keyword.id, title: keyword.title, value: true });
-              }
-            });
-          });
-          app.setState({ keywords: keywords });
-          app.props.dispatchSetLoadingAction(false);
-        }     
-    });    
-  }
-
-  checkboxChange(id) {
-    let keywords = _.cloneDeep(this.state.keywords);
-    keywords.forEach(keyword => {
-      if (keyword.id == id)
+  selectKeyword(id) {
+    let keywords = {...this.state.user.keywords};
+    Object.entries(keywords).forEach(keyword => {
+      if (keyword[0] == id)
       {
-        keyword.value = !keyword.value;
+        keyword[1].isSelected = !keyword[1].isSelected;
       }
     });
     this.setState({ keywords: keywords });
@@ -146,19 +121,39 @@ class Search extends PureComponent {
     this.setState({ selected_city: city });
   }
 
+  async onRefresh() {
+    let app = this;
+    await this.props.dispatchGetUserAction(this.state.user.nickname, function (data, error, response) {
+      app.props.dispatchSetLoadingAction(false);
+      if (data) {
+        app.setState({ user: data, isRefreshing: false });
+        app.populateKeywords(data.keywords.split(","));
+      }
+      else {
+        app.props.dispatchSetLoadingAction(false);
+        Alert.alert('Unknown Error', 'An unknown error occured during refresh. Please try again.', [{ text: 'OK' }], { cancelable: true });
+        console.log(error);
+      }
+    });
+  }
+
   async searchPeople() {
     let app = this;
     app.props.dispatchSetLoadingAction(true);
 
     var searchQuery = { 
-      id: Settings.User.id,
+      id: this.state.user.id,
       showLocation: this.state.showLocation,
       country: this.state.selected_country,
       city: this.state.selected_city,
-      keywords: this.state.keywords.filter(keyword => { return keyword.value == true })
+      keywords: []
     };
 
-    console.log(searchQuery);
+    Object.entries(this.state.user.keywords).forEach(keyword => {
+      if (keyword[1].isSelected) {
+        searchQuery.keywords.push({id: keyword[0], title: keyword[1].title});
+      }
+    });
 
     await this.props.dispatchSearchPeopleAction(searchQuery, function (data, error, response) {
       app.props.dispatchSetLoadingAction(false);
@@ -215,15 +210,15 @@ class Search extends PureComponent {
         <View style={[Styles.LowerContainter, { flexDirection: 'row', justifyContent: 'space-around' }]}>
           <TouchableHighlight onPress={() => this.chat()} onLongPress={() => this.createAccount()} style={Styles.DopaChatButton} underlayColor={Colors.DopaGreen} >
             <View style={{flexDirection: 'row'}}>
-              <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.DopaChatButtonText, {fontWeight: 'bold'}]}>Dopa </Label>
+              <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.DopaChatButtonText, {fontWeight: 'bold'}]}>Dopa</Label>
               <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.DopaChatButtonText]}>Chat</Label>
             </View>
           </TouchableHighlight>
-          <TouchableHighlight onPress={() => this.setState({ showResults: false })} onLongPress={() => this.setState({ showResults: false })} style={Styles.DopaChatButton} underlayColor={Colors.DopaGreen} >
+          {/* <TouchableHighlight onPress={() => this.setState({ showResults: false })} onLongPress={() => this.setState({ showResults: false })} style={Styles.DopaChatButton} underlayColor={Colors.DopaGreen} >
             <View style={{flexDirection: 'row'}}>
               <Label font={Settings.FONTS.HelveticaNeueBold} style={[Styles.DopaChatButtonText]}>Back</Label>
             </View>
-          </TouchableHighlight>
+          </TouchableHighlight> */}
         </View>
       </View>
     );
@@ -232,10 +227,12 @@ class Search extends PureComponent {
   renderCountries() {
     return (
       <View>
-        <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>Country</Label>
-        <Picker selectedValue={this.state.selected_country} style={Styles.Picker} onValueChange={(itemValue, itemIndex) => this.onCountryChange(itemValue)}>
-          {this.state.countries}
-        </Picker>
+        <Label style={GlobalStyles.Subtitle} font={Settings.FONTS.HelveticaNeueBold}>Country</Label>
+        <View style={GlobalStyles.PickerContainer}>
+          <Picker selectedValue={this.state.selected_country} style={[GlobalStyles.Picker, Styles.Picker]} onValueChange={(itemValue, itemIndex) => this.onCountryChange(itemValue)}>
+            {this.state.countries}
+          </Picker>
+        </View>
       </View>
     )
   }
@@ -243,22 +240,25 @@ class Search extends PureComponent {
   renderCities() {
     return (
       <View>
-        <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>City</Label>
-        <Picker selectedValue={this.state.selected_city} style={Styles.Picker} onValueChange={(itemValue, itemIndex) => this.onCityChange(itemValue)}>
-          {this.state.cities}
-        </Picker>
+        <Label style={GlobalStyles.Subtitle} font={Settings.FONTS.HelveticaNeueBold}>City</Label>
+        <View style={GlobalStyles.PickerContainer}>
+          <Picker selectedValue={this.state.selected_city} style={Styles.Picker} onValueChange={(itemValue, itemIndex) => this.onCityChange(itemValue)}>
+            {this.state.cities}
+          </Picker>
+        </View>
       </View>
     )
   }
 
-  renderSelectedKeywords() {
+  renderKeywords() {
     return (
-      <FlatList data={this.state.keywords} keyExtractor={(item, index) => "keyword_" + index} numColumns = {3}
+      <FlatList data={Object.entries(this.state.user.keywords)} keyExtractor={(item, index) => "keyword_" + index} numColumns = {0}
         renderItem={(keyword, index) => (
-          <View key={keyword.id} style={{flexDirection: 'row', alignItems: 'center'}}>
-            <CheckBox key={keyword.item.id} value={keyword.item.value} onValueChange={(itemValue, itemIndex) => this.checkboxChange(keyword.item.id)} style={Styles.Checkbox}/>
-            <Label font={Settings.FONTS.HelveticaNeueBold}>{keyword.item.title}</Label>
-          </View>
+          <TouchableHighlight style={{ padding: 10, backgroundColor: keyword.item[1].isSelected ? Colors.Gray6 : Colors.Transparent, marginBottom: 10 }} onPress={() => this.selectKeyword(keyword.item[0])} onLongPress={() => this.selectKeyword(keyword.item[0])} underlayColor={Colors.Transparent} >
+            <View key={keyword} style={{justifyContent: 'center'}}>
+              <Label font={Settings.FONTS.HelveticaNeueBold}>▸  {keyword.item[1].title} </Label>
+            </View>
+          </TouchableHighlight>
         )}
       />
     );
@@ -269,24 +269,27 @@ class Search extends PureComponent {
       <View style={{flex: 1}}>
         <View style={{flex: 1}}>
           <View style={Styles.MiddleContainer}>
-          <Label style={GlobalStyles.PageTitle} font={Settings.FONTS.HelveticaNeueMedium}>Matching</Label>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Label style={[GlobalStyles.TextFieldPretext, { marginBottom: 10 }]} font={Settings.FONTS.HelveticaNeueBold}>Show Location</Label>
-            <Switch trackColor={{ false: Colors.Gray3, true: Colors.DopaGreen }} thumbColor={this.state.showLocation ? Colors.DopaGreenLight : Colors.White}
-            ios_backgroundColor="#3e3e3e" onValueChange={val => this.setState({ showLocation: val })} value={this.state.showLocation} />
+            <Label style={GlobalStyles.PageTitle} font={Settings.FONTS.HelveticaNeueMedium}>Matching</Label>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Label style={GlobalStyles.Subtitle} font={Settings.FONTS.HelveticaNeueBold}>Show Location</Label>
+              <Switch trackColor={{ false: Colors.Gray3, true: Colors.DopaGreen }} thumbColor={this.state.showLocation ? Colors.DopaGreenLight : Colors.White}
+              ios_backgroundColor="#3e3e3e" onValueChange={val => this.setState({ showLocation: val })} value={this.state.showLocation} />
+            </View>
+            { this.state.showLocation && 
+              (<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                {this.renderCountries()}
+                {this.renderCities()}
+              </View> )
+            }
+            { !this.state.showLocation && 
+              <Label style={GlobalStyles.Info} font={Settings.FONTS.HelveticaNeueBold}>When locations are turned off, the search results will be global.</Label>
+            }
+            <View>
+              <View style={GlobalStyles.Separator}></View>
+              <Label style={GlobalStyles.Subtitle} font={Settings.FONTS.HelveticaNeueBold}>Keywords</Label>
+              {this.renderKeywords()}       
+            </View>
           </View>
-          { this.state.showLocation && 
-            (<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              {this.renderCountries()}
-              {this.renderCities()}
-            </View> )
-          }
-          <View>
-            <View style={GlobalStyles.Separator}></View>
-            <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>Keywords</Label>
-            {this.renderSelectedKeywords()}       
-          </View>
-        </View>          
         </View>
         <View style={Styles.LowerContainter}>
           <TouchableHighlight onPress={() => this.searchPeople()} onLongPress={() => this.searchPeople()} style={Styles.DopaChatButton} underlayColor={Colors.DopaGreen} >
@@ -297,6 +300,12 @@ class Search extends PureComponent {
     )
   }
 
+  renderBusyIndicator() {
+    return (
+      <ActivityIndicator style={{ marginTop: Settings.WindowHeight / 50 }} animating={true} size={Settings.IsTablet ? "large" : "small"} color={Colors.DopaGreen} />
+    )
+  }
+
   render() {
     return (
       <View style={GlobalStyles.Container}>
@@ -304,7 +313,9 @@ class Search extends PureComponent {
           <Image style={GlobalStyles.GroupedLogo} source={Images.Logo} />
           <Label style={GlobalStyles.Version} font={Settings.FONTS.HelveticaNeueThin}>v{getVersion()}</Label>
         </View>
-        { this.state.showResults ? this.renderResults() : this.renderSearch() }
+        <ScrollView refreshControl={<RefreshControl refreshing={this.state.isRefreshing} onRefresh={() => this.onRefresh()}></RefreshControl>} >
+          { this.state.showResults ? this.renderResults() : this.state.isReady ? this.renderSearch() : this.renderBusyIndicator() }
+        </ScrollView>
       </View>
     );
   }

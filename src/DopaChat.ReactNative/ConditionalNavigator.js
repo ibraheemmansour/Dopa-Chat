@@ -40,10 +40,10 @@ class ConditionalNavigator extends Component {
   }
 
   getInitialRouteName() {
-    if (new Date(this.props.expiry) < (new Date())) {
+    if (this.props.expiry == null || new Date(this.props.expiry) < (new Date())) {
       return Settings.ScreenNames.Login;
     }
-    
+
     Settings.User = store.getState().loginReducer.user;
     return Settings.ScreenNames.Account;
   }
@@ -75,7 +75,7 @@ class ConditionalNavigator extends Component {
         }
       }
     }, {
-      initialRouteName: Settings.ScreenNames.SplashScreen,
+      initialRouteName: Settings.ScreenNames.Splash,
       initialRouteParams: {
         screen: this.getInitialRouteName()
       },
@@ -145,6 +145,7 @@ class ConditionalNavigator extends Component {
               index: 0,
               actions: [NavigationActions.navigate({ routeName: Settings.ScreenNames.Login })],
             });
+            Settings.User = null;
             scene.navigation.dispatch(resetAction);
           }
         }

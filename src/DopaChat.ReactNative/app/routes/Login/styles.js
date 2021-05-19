@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     Password: { letterSpacing: 1.4 },
     LoginButtonContainter: { flexDirection: 'row', justifyContent: 'space-around', marginTop: Settings.WindowHeight / 20 },
     FootContainer: { flex: 1, width: Settings.WindowWidth, marginTop: Settings.WindowHeight / 20, marginBottom: Settings.WindowHeight / 20 },
-    FootNote: { fontSize: 12, color: Colors.DopaGreen, textAlign: 'justify', paddingLeft: Settings.WindowWidth / 20, paddingRight: Settings.WindowWidth / 20}
+    FootNote: { fontSize: 12, marginTop: Settings.WindowHeight / 7, color: Colors.DopaGreen, textAlign: 'center', paddingLeft: Settings.WindowWidth / 20, paddingRight: Settings.WindowWidth / 20 }
 });
 
 export default styles;

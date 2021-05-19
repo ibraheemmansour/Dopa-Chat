@@ -4,7 +4,6 @@ import { View, Image } from 'react-native';
 import Settings from '../../config/settings.js';
 import Images from '../../config/images.js';
 import Label from '../../components/Label.js';
-import GlobalStyles from '../../config/globalstyles.js';
 
 import Styles from './styles.js';
 

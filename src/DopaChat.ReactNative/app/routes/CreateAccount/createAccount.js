@@ -198,9 +198,11 @@ class CreateAccount extends PureComponent {
     return (
       <View>
         <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>LANGUAGE</Label>
-        <Picker selectedValue={this.state.selected_language} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, height: 50 }} onValueChange={(itemValue, itemIndex) => this.setState({ selected_language: itemValue })}>
-          {this.state.languages}
-        </Picker>
+        <View style={GlobalStyles.PickerContainer}>
+          <Picker selectedValue={this.state.selected_language} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, height: 50 }} onValueChange={(itemValue, itemIndex) => this.setState({ selected_language: itemValue })}>
+            {this.state.languages}
+          </Picker>
+        </View>
       </View>
     )
   }
@@ -209,9 +211,11 @@ class CreateAccount extends PureComponent {
     return (
       <View>
         <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>COUNTRY</Label>
-        <Picker selectedValue={this.state.selected_country} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, width: Settings.WindowWidth / 3, height: 50 }} onValueChange={(itemValue, itemIndex) => this.getSelectedCountryCities(itemValue)}>
-          {this.state.countries}
-        </Picker>
+        <View style={GlobalStyles.PickerContainer}>
+          <Picker selectedValue={this.state.selected_country} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, width: Settings.WindowWidth / 3, height: 50 }} onValueChange={(itemValue, itemIndex) => this.getSelectedCountryCities(itemValue)}>
+            {this.state.countries}
+          </Picker>
+        </View>
       </View>
     )
   }
@@ -220,9 +224,11 @@ class CreateAccount extends PureComponent {
     return (
       <View>
         <Label style={Styles.UsernamePretext} font={Settings.FONTS.HelveticaNeueBold}>CITY</Label>
-        <Picker selectedValue={this.state.selected_city} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, width: Settings.WindowWidth / 3, height: 50 }} onValueChange={(itemValue, itemIndex) => this.setState({ selected_city: itemValue })}>
-          {this.state.cities}
-        </Picker>
+        <View style={GlobalStyles.PickerContainer}>
+          <Picker selectedValue={this.state.selected_city} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, width: Settings.WindowWidth / 3, height: 50 }} onValueChange={(itemValue, itemIndex) => this.setState({ selected_city: itemValue })}>
+            {this.state.cities}
+          </Picker>
+        </View>
       </View>
     )
   }
@@ -230,16 +236,17 @@ class CreateAccount extends PureComponent {
   renderKeywords() {
     // TODO prevent multiple select from choosing on render
     return (
-      <Picker selectedValue={this.state.selected_keyword} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, height: 50 }} onValueChange={(itemValue, itemIndex) => this.selectKeyword(itemValue)}>
-        {this.state.keywords}
-      </Picker>
+      <View style={GlobalStyles.PickerContainer}>
+        <Picker selectedValue={this.state.selected_keyword} style={{ backgroundColor: Colors.White, borderColor: Colors.DopaGreen, borderWidth: 5, height: 50 }} onValueChange={(itemValue, itemIndex) => this.selectKeyword(itemValue)}>
+          {this.state.keywords}
+        </Picker>
+      </View>
     )
   }
 
   renderSelectedKeywords() {
     let keywords = []
     this.state.selected_keywords.forEach((keyword, index) => {
-      console.log(index);
       keywords.push(<Label key={index} style={{ backgroundColor: Colors.White }}>{keyword.props.label}</Label>);
     });
     return (

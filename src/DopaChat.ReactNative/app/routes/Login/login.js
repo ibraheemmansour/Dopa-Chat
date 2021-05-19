@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Keyboard, View, Image, Alert, KeyboardAvoidingView, ScrollView, TextInput, BackHandler, TouchableHighlight } from 'react-native';
+import { Keyboard, View, Alert, KeyboardAvoidingView, TextInput, BackHandler, TouchableHighlight } from 'react-native';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -83,12 +83,12 @@ class Login extends PureComponent {
           <Header />
           <View style={Styles.MiddleContainer}>
             <Label style={Styles.MainTitle} font={Settings.FONTS.HelveticaNeueThin}>Login</Label>
-            <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>USERNAME</Label>
+            <Label style={GlobalStyles.Subtitle} font={Settings.FONTS.HelveticaNeueBold}>USERNAME</Label>
             <TextInput autoCapitalize="none" onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onUsernameChange(e)} style={[Styles.TextInput]}>
               {`${this.state.username}`}
             </TextInput>
             <View style={GlobalStyles.Separator}></View>
-            <Label style={GlobalStyles.TextFieldPretext} font={Settings.FONTS.HelveticaNeueBold}>PASSWORD</Label>
+            <Label style={GlobalStyles.Subtitle} font={Settings.FONTS.HelveticaNeueBold}>PASSWORD</Label>
             <TextInput autoCapitalize="none" secureTextEntry={true} onSubmitEditing={Keyboard.dismiss} onChange={(e) => this.onPasswordChange(e)} style={[Styles.TextInput, Styles.Password]}>
               {`${this.state.password}`}
             </TextInput>
@@ -97,14 +97,12 @@ class Login extends PureComponent {
                 <Label font={Settings.FONTS.HelveticaNeueBold} style={[GlobalStyles.DopaButtonText]}>Sign In</Label>
               </TouchableHighlight>
               <TouchableHighlight onPress={() => this.createAccount()} onLongPress={() => this.createAccount()} style={GlobalStyles.DopaButton} underlayColor={Colors.DopaGreen} >
-                <Label font={Settings.FONTS.HelveticaNeueBold} style={[GlobalStyles.DopaButtonText]}>Create Account</Label>
+                <Label font={Settings.FONTS.HelveticaNeueBold} style={[GlobalStyles.DopaButtonText]}>Register</Label>
               </TouchableHighlight>
             </View>
           </View>
           <View style={Styles.FootContainer}>
-            <Label style={Styles.FootNote}>Our aim is simplicity and easy-use, few steps towards your mental relief.</Label>
-            <Label style={Styles.FootNote}>In DopaChat, you can chat to raise your Dopamine levels, the chemical specific for happiness. This platform allows you to connect with others who share your feelings, traumas or anxieties in a secure and private environment.</Label>
-            <Label style={[Styles.FootNote]}>Disclaimer, this platform does not replace professional help. If you suffer from any mental illnesses, consult a professional.</Label>
+            <Label style={[Styles.FootNote]}>Disclaimer: this platform does not replace professional help. If you suffer from any mental illnesses, consult a professional or visit our "Seek Professional Help" page.</Label>
           </View>
         </KeyboardAvoidingView>
       </View>

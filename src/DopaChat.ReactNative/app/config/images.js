@@ -1,5 +1,6 @@
 const Images = {
    Logo: require('../images/logo.png'),
+   Edit: require('../images/edit.png'),
    Tab_Account_Selected: require('../images/account_selected.png'),
    Tab_Account: require('../images/account.png'),
    Tab_Search_Selected: require('../images/search_selected.png'),

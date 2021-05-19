@@ -16,6 +16,7 @@
           <Property Name="Website" Type="varchar" MaxLength="300" />
           <Property Name="Telephone" Type="varchar" MaxLength="60" />
           <Property Name="CityId" Type="int" Nullable="false" />
+          <Property Name="CityName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Cities">
           <Key>
@@ -132,6 +133,7 @@
           <Property Name="Website" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="Telephone" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
           <Property Name="CityId" Type="Int32" Nullable="false" />
+          <Property Name="CityName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="City" Relationship="DopaChatModel.FK_Assistants_Cities" FromRole="Assistant" ToRole="City" />
         </EntityType>
         <EntityType Name="City">
@@ -216,6 +218,7 @@
           <EntitySetMapping Name="Assistants">
             <EntityTypeMapping TypeName="DopaChatModel.Assistant">
               <MappingFragment StoreEntitySet="Assistants">
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
                 <ScalarProperty Name="CityId" ColumnName="CityId" />
                 <ScalarProperty Name="Telephone" ColumnName="Telephone" />
                 <ScalarProperty Name="Website" ColumnName="Website" />

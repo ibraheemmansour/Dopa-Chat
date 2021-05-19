@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="4fbb00bbc14b4f9f9265724e53bb448c" Name="Diagram1">
         <EntityTypeShape EntityType="DopaChatModel.Assistant" Width="1.5" PointX="3" PointY="5.25" />
-        <EntityTypeShape EntityType="DopaChatModel.City" Width="1.5" PointX="0.75" PointY="2.75" />
+        <EntityTypeShape EntityType="DopaChatModel.City" Width="1.5" PointX="0.75" PointY="2.875" />
         <EntityTypeShape EntityType="DopaChatModel.Keyword" Width="1.5" PointX="5.75" PointY="0.75" />
         <EntityTypeShape EntityType="DopaChatModel.Language" Width="1.5" PointX="5.75" PointY="3.75" />
         <EntityTypeShape EntityType="DopaChatModel.User" Width="1.5" PointX="3" PointY="1.125" />

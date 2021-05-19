@@ -13,6 +13,12 @@ namespace DopaChat.WebAPI.Controllers
     public class UserController : ApiController
     {
         private DopaChatEntities db = new DopaChatEntities();
+        Helper helper;
+
+        public UserController()
+        {
+            helper = new Helper();
+        }
 
         public IList<UserDto> GetUsers()
         {
@@ -20,22 +26,23 @@ namespace DopaChat.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public IHttpActionResult GetUser(int id)
+        [Route("{nickname}")]
+        public IHttpActionResult GetUser(string nickname)
         {
-            User user = db.Users.Find(id);
+            User user = db.Users.FirstOrDefault(x=> x.Nickname == nickname);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            var city = db.Cities.FirstOrDefault(x => x.Id == user.CityId);
-
-            if (city != null)
+            var keywordsDict = helper.GetKeywords(user.Keywords.Split(',').ToList());
+            string keywords = string.Empty; 
+            foreach (var kvp in keywordsDict)
             {
-                user.Country = city.ISO2;
+                keywords += (kvp.Value + ",");
             }
+            user.Keywords = keywords.Remove(keywords.Length - 1, 1);
 
             return Ok(Mapper.Map<User, UserDto>(user));
         }
@@ -102,15 +109,15 @@ namespace DopaChat.WebAPI.Controllers
         }
 
         [HttpPut]
-        [Route("{username}")]
-        public IHttpActionResult PutUser(string username, [FromBody] UserDto userDto)
+        [Route("{nickname}")]
+        public IHttpActionResult PutUser(string nickname, [FromBody] UserDto userDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            User user = db.Users.Find(username);
+            User user = db.Users.FirstOrDefault(x=> x.Nickname == nickname);
 
             if (user == null)
             {
@@ -120,10 +127,12 @@ namespace DopaChat.WebAPI.Controllers
             user.FirstName = userDto.FirstName;
             user.LastName = userDto.LastName;
             user.Nickname = userDto.Nickname;
-            user.Email = userDto.Email;
+            //user.Email = userDto.Email;
             user.Description = userDto.Description;
-            //user.Keywords = userDto.Keywords;
+            user.Keywords = userDto.Keywords;
             user.Languages = userDto.Languages;
+            user.Country = userDto.Country;
+            user.CityId = userDto.CityId;
 
             db.SaveChanges();
 

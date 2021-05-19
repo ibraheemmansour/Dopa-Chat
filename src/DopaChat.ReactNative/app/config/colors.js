@@ -5,12 +5,14 @@ const Colors = {
 	DopaBlack: '#343433',
 	DopaGreen: '#4e784e',
 	DopaGreenLight: '#a9d4a9',
+	Red: "#ff0000",
 	Gray0: '#f4f4f4',
 	Gray1: '#e4e4e4',
 	Gray2: '#e0e1e1',
 	Gray3: '#767577',
 	Gray4: '#8c8c8c',
-	Gray5: '#5a5a5a'
+	Gray5: '#5a5a5a',
+	Gray6: 'lightgray',
 };
 
 export default Colors;

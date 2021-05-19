@@ -32,6 +32,8 @@ public partial class Assistant
 
     public int CityId { get; set; }
 
+    public string CityName { get; set; }
+
 
 
     public virtual City City { get; set; }

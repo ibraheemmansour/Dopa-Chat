@@ -11,6 +11,12 @@ namespace DopaChat.WebAPI.Controllers
     public class AuthController : ApiController
     {
         private DopaChatEntities db = new DopaChatEntities();
+        Helper helper;
+
+        public AuthController()
+        {
+            helper = new Helper();
+        }
 
         [HttpPost]
         public IHttpActionResult AuthenticateUser([FromBody]LoginBody model)
@@ -20,6 +26,14 @@ namespace DopaChat.WebAPI.Controllers
             if (user == null)
             {
                 return NotFound();
+            }
+
+            string country = string.Empty;
+            City city = db.Cities.FirstOrDefault(x => x.Id == user.CityId);
+
+            if (city != null)
+            {
+                country = city.ISO2;
             }
 
             if (!user.Password.ToLower().Equals(model.Password.ToLower()))
@@ -35,9 +49,12 @@ namespace DopaChat.WebAPI.Controllers
                 lastName = user.LastName,
                 email = user.Email,
                 description = user.Description,
-                language = user.Languages,
-                keywords = user.Keywords,
-                city = user.CityId,
+                languages = user.Languages,
+                password = user.Password,
+                keywords = (helper.GetKeywords(user.Keywords.Split(',').ToList())),
+                cityId = user.CityId,
+                cityName = city.CityName,
+                country = country,
                 access_token = Guid.NewGuid().ToString("N")
             }));
         }

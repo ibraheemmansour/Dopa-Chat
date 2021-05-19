@@ -261,6 +261,7 @@
     <Compile Include="AutoMapperProfiles\LanguageProfile.cs" />
     <Compile Include="AutoMapperProfiles\CityProfile.cs" />
     <Compile Include="AutoMapperProfiles\UserProfile.cs" />
+    <Compile Include="Classes\Helper.cs" />
     <Compile Include="Classes\SearchQuery.cs" />
     <Compile Include="Classes\ErrorResponseHelper.cs" />
     <Compile Include="Classes\Extensions.cs" />
@@ -356,6 +357,13 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
+    <ItemGroup>
+      <RoslynFiles Include="$(CscToolPath)\*" />
+    </ItemGroup>
+    <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
+    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
   </Target>
   <ProjectExtensions>
     <VisualStudio>

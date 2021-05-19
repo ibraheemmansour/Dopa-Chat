@@ -32,17 +32,18 @@ namespace DopaChat.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route("city/{id}")]
-        public IHttpActionResult GetAssistantsByCity(int id)
+        [Route("country/{id}")]
+        public IHttpActionResult GetAssistantsByCountry(string id)
         {
-            City city = db.Cities.Find(id);
+            List<Assistant> assistants = new List<Assistant>();
+            List<City> cities = db.Cities.Where(c=>c.ISO2 == id).ToList();
 
-            if (city == null)
+            foreach(City city in cities)
             {
-                return NotFound();
+                assistants.AddRange(db.Assistants.Where(a => a.CityId == city.Id).ToList());
             }
 
-            return Ok(Mapper.Map<List<Assistant>, List<AssistantDto>>(city.Assistants.ToList()));
+            return Ok(Mapper.Map<List<Assistant>, List<AssistantDto>>(assistants));
         }
     }
 }
