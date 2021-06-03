@@ -1,5 +1,0 @@
-GET www.dopachat.com/accounts
-GET www.dopachat.com/accounts/12472
-POST www.dopachat.com/accounts BODY (locationId, keyWordId, LanguageId)
-POST www.dopachat.com/accounts/12472/request BODY(request message)
-POST www.dopachat.com/accounts/35432/response BODY(bool accept/decline, (optional) response message)
